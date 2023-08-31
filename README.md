@@ -15,5 +15,4 @@ library(enviro)
 
 #' substitute the url from your prometheus server
 
-pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
-                          "http://pip1.crabdance.com:1505/api/v1/query_range"))
+pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","http://pip1.crabdance.com:1505/api/v1/query_range"))
