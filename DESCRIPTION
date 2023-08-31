@@ -1,0 +1,12 @@
+Package: enviro
+Title: Displays data of pimoroni enviro from prometheus
+Version: 0.0.0.9000
+Authors@R: person("Dimitrios","Zacharatos","dimitrios@psycholate.com",role=c("aut","cre"),comment=c(ORCID="0000-0003-1789-8294"))
+Description: Displays data of pimoroni enviro and pimoroni enviro + exported from prometheus
+Depends: shiny,shinydashboard,httr,jsonlite,xts,zoo,plotly
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Author: Dimitrios Zacharatos [aut, cre]
+Maintainer: Dimitrios Zacharatos <dimitrios@psycholate.com>
+RoxygenNote: 7.2.3
