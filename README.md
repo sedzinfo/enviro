@@ -5,6 +5,11 @@ Displays data of pimoroni enviro from prometheus
 [Getting Started with Enviro Plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)  
 [Enviro Plus Python GitHub Repository](https://github.com/pimoroni/enviroplus-python)  
 
+In order to create your own server you need to: 
+1. Install pimoroni drivers in pi  
+2. Deploy a prometheus server in pi  
+3. After you deploy the server use the url as an argument in prometheus_url (see bellow)  
+
 # Installation Instructions
 install.packages("devtools")
 library(devtools)
