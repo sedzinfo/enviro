@@ -13,7 +13,7 @@ install_github("sedzinfo/enviro")
 # Usage
 library(enviro)
 
-#' substitute the url from your prometheus server
+#' substitute the url from your prometheus server  
 pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
                           "http://pip1.crabdance.com:1505/api/v1/query_range"))
 
