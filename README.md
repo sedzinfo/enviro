@@ -17,6 +17,5 @@ library(enviro)
 
 pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","http://pip1.crabdance.com:1505/api/v1/query_range"))
 
-```
-![Alt text]([https://github.com/sedzinfo/enviro/blob/main/script.png](https://github.com/sedzinfo/enviro/blob/main/enviro1.png))
-```
+
+![Alt text](https://github.com/sedzinfo/enviro/blob/main/enviro1.png)
