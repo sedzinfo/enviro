@@ -11,15 +11,15 @@ In order to create your own server you need to:
 3. After you deploy the server use the url as an argument in prometheus_url (see bellow)  
 
 # Installation Instructions
-install.packages("devtools")
-library(devtools)
-install_github("sedzinfo/enviro")
+install.packages("devtools")  
+library(devtools)  
+install_github("sedzinfo/enviro")  
 
 # Usage
 library(enviro)
 
 #' substitute the url from your prometheus server  
-pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
+pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",  
                           "http://pip1.crabdance.com:1505/api/v1/query_range")
 
 # Screenshots
