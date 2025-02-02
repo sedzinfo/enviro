@@ -2,8 +2,8 @@
 Displays data of pimoroni enviro from prometheus
 
 ## Examples of how to setup your own Pimoroni Enviro
-[Getting Started with Enviro Plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)
-[Enviro Plus Python GitHub Repository](https://github.com/pimoroni/enviroplus-python)
+[Getting Started with Enviro Plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)  
+[Enviro Plus Python GitHub Repository](https://github.com/pimoroni/enviroplus-python)  
 
 # Installation Instructions
 install.packages("devtools")
