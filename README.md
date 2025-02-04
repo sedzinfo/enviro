@@ -12,7 +12,7 @@ In order to create your own server you need to:
 
 # Installation Instructions
 ## install R
-installation instructions can be found here: https://github.com/sedzinfo/enviro/blob/main/enviro1.png](https://cran.r-project.org/  
+installation instructions can be found here: https://cran.r-project.org/  
 ## install rstudio (optional but a good idea)  
 installation instructions can be found here: https://posit.co/downloads/  
 
