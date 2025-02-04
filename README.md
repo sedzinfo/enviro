@@ -13,10 +13,10 @@ In order to create your own server you need to:
 # Installation Instructions
 ## install R
 installation instructions can be found here: https://cran.r-project.org/  
-## install rstudio (optional but a good idea)  
+## install RStudio IDE (optional but a good idea)  
 installation instructions can be found here: https://posit.co/downloads/  
 
-open R studio and type in the console:
+open RStudio and type in the console:
 ```
 install.packages("devtools")  
 library(devtools)  
@@ -28,7 +28,7 @@ install_github("sedzinfo/enviro")
 library(enviro)
 ```
 
-#' substitute the url from your prometheus server  
+substitute the url from your prometheus server  
 ```
 pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","http://pip1.crabdance.com:1505/api/v1/query_range"))
 ```
