@@ -11,6 +11,13 @@ In order to create your own server you need to:
 3. After you deploy the server use the url as an argument in prometheus_url (see bellow)  
 
 # Installation Instructions
+## install R
+installation instructions can be found here: ![Alt text]([https://github.com/sedzinfo/enviro/blob/main/enviro1.png](https://cran.r-project.org/))  
+## install rstudio (optional but a good idea)  
+installation instructions can be found here: ![Alt text]([https://posit.co/downloads/))  
+
+open R studio and type in the console:
+
 install.packages("devtools")  
 library(devtools)  
 install_github("sedzinfo/enviro")  
