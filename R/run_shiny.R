@@ -5,7 +5,8 @@
 #' @param start_time start time in this format: "2025-01-31T11:48:08Z"
 #' @param end_time end time in this format: "2025-02-07T11:48:33Z"
 #' @param urlq Prometheus url
-#' @import jsonlite httr
+#' @importFrom jsonlite fromJSON
+#' @importFrom httr GET content
 #' @keywords prometheus query
 #' @export
 #' @examples
@@ -59,7 +60,8 @@ get_data<-function(start_time=format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
 #' @param variable one of "Temperature" "Humidity" "Pressure" "Lux" "Proximity" "NH3" "Reducing" "Oxidising" "PM1" "PM2.5" "PM10"
 #' @param scale scale
 #' @param k integer width of the rolling window. Must be odd for rollmedian
-#' @import plotly zoo
+#' @import plotly
+#' @importFrom zoo rollmean
 #' @keywords plot timeseries
 #' @export
 #' @examples
