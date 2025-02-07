@@ -35,29 +35,19 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
   help_reducing<-"Mostly Carbon Monoxide,\n H2S,Ammonia,Ethanol,Hydrogen,Methane,Propane,Iso-butane"
   help_oxidising<-"Mostly Nitrogen Dioxide,\n NO,Hydrogen"
   query<-c("temperature","humidity","pressure","lux","proximity",
-           "NH3","reducing","oxidising",
-           "PM1","PM25","PM10")
+           "NH3","reducing","oxidising","PM1","PM25","PM10")
   names<-c("Temperature","Humidity","Pressure","Lux","Proximity",
-           "NH3","Reducing","Oxidising",
-           "PM1","PM2.5","PM10")
-  scale<-c("°C","%","hPa","Lux",NA,
-           "Ohms","Ohms","Ohms",
-           "ug/m3","ug/m3","ug/m3")
-  range_ideal_min<-c(20,40,1010,1000,0,
-                     NA,NA,NA,
-                     0,0,0)
-  range_ideal_max<-c(25,60,1015,1500,1,
-                     NA,NA,NA,
-                     20,20,20)
+           "NH3","Reducing","Oxidising","PM1","PM2.5","PM10")
+  scale<-c("°C","%","hPa","Lux",NA,"Ohms","Ohms","Ohms","ug/m3","ug/m3","ug/m3")
+  range_ideal_min<-c(20,40,1010,1000,0,NA,NA,NA,0,0,0)
+  range_ideal_max<-c(25,60,1015,1500,1,NA,NA,NA,20,20,20)
   point_ideal<-c(24,50,1013,1200,NA,NA,NA,NA,0,0,0)
   range_min<-c(-50,0,900,0,0,NA,NA,NA,0,0,0)
   range_max<-c(50,100,1100,10000,10,NA,NA,NA,400,400,400)
-  help<-c(NA,NA,NA,NA,NA,
+  help<-c(rep("",5),
           help_NH3,help_reducing,help_oxidising,
           help_pm1,help_pm25,help_pm10)
   df_reference<-data.frame(query=query,names=names,scale,range_min,range_max,range_ideal_min,range_ideal_max,point_ideal,help=help)
-  height<-"400px"
-  style_height<-"height:400px; <hr style=border: 1px solid #FFA500; margin: 10px 0;>"
   ##########################################################################################
   #
   ##########################################################################################
@@ -89,7 +79,7 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
     names(filtered_df)[grep("PM25",names(filtered_df))]<-"PM2.5"
     return(filtered_df)
   }
-  filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
+  # filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
   ##########################################################################################
   # TIME SERIES
   ##########################################################################################
@@ -154,13 +144,13 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
   ##########################################################################################
   # GAUGE
   ##########################################################################################
-  plot_gauge<-function(name="Temperature") {
-    df_last<-filtered_df[grep(max(filtered_df$Date),filtered_df$Date),]
+  plot_gauge<-function(name="Temperature",df_last=filtered_df) {
+    df_last<-df_last[df_last$Timestamp%in%max(df_last$Timestamp),]
     last_value<-df_last[,name]
-    value_mean<-mean(filtered_df[,name],na.rm=TRUE)
-    value_sd<-sd(filtered_df[,name],na.rm=TRUE)
-    value_max<-max(filtered_df[,name])
-    value_min<-min(filtered_df[,name])
+    value_mean<-mean(df_last[,name],na.rm=TRUE)
+    value_sd<-sd(df_last[,name],na.rm=TRUE)
+    value_max<-max(df_last[,name])
+    value_min<-min(df_last[,name])
     reference<-df_reference[df_reference$names%in%name,]
 
     range<-c(reference$range_min,reference$range_max)
@@ -279,8 +269,6 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
   server<-function(input,output) {
     observeEvent(list(input$days,input$server_timeseries), {
       observe({
-        if(exists("filtered_df"))
-          rm(filtered_df)
         start_time<-format(Sys.time()-as.numeric(input$days)*60*60*24,"%Y-%m-%dT%H:%M:%SZ")
         end_time<-format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ")
         filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=input$server_timeseries)
@@ -305,26 +293,26 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
     })
     observeEvent(list(input$server_gauge), {
       observe({
-        if(exists("filtered_df"))
-          rm(filtered_df)
         start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
         end_time<-format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ")
         filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=input$server_gauge)
+        # filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
+        df_last<-filtered_df[filtered_df$Timestamp%in%max(filtered_df$Timestamp),]
         output$last_date<-renderText(end_time)
-        output$gauge_temperature<-renderPlotly({plot_gauge(name="Temperature") %>% as_widget()})
-        output$gauge_humidity<-renderPlotly({plot_gauge(name="Humidity") %>% as_widget()})
-        output$gauge_pressure<-renderPlotly({plot_gauge(name="Pressure") %>% as_widget()})
-        output$gauge_lux<-renderPlotly({plot_gauge(name="Lux") %>% as_widget()})
-        output$gauge_proximity<-renderPlotly({plot_gauge(name="Proximity") %>% as_widget()})
+        output$gauge_temperature<-renderPlotly({plot_gauge(name="Temperature",df_last=df_last) %>% as_widget()})
+        output$gauge_humidity<-renderPlotly({plot_gauge(name="Humidity",df_last=df_last) %>% as_widget()})
+        output$gauge_pressure<-renderPlotly({plot_gauge(name="Pressure",df_last=df_last) %>% as_widget()})
+        output$gauge_lux<-renderPlotly({plot_gauge(name="Lux",df_last=df_last) %>% as_widget()})
+        output$gauge_proximity<-renderPlotly({plot_gauge(name="Proximity",df_last=df_last) %>% as_widget()})
         if(!is.null(filtered_df$PM1)||!is.null(filtered_df$PM2.5)||!is.null(filtered_df$PM10)) {
-          output$gauge_pm1<-renderUI({plot_gauge(name="PM1") %>% as_widget()})
-          output$gauge_pm25<-renderUI({plot_gauge(name="PM2.5") %>% as_widget()})
-          output$gauge_pm10<-renderUI({plot_gauge(name="PM10") %>% as_widget()})
+          output$gauge_pm1<-renderUI({plot_gauge(name="PM1",df_last=df_last) %>% as_widget()})
+          output$gauge_pm25<-renderUI({plot_gauge(name="PM2.5",df_last=df_last) %>% as_widget()})
+          output$gauge_pm10<-renderUI({plot_gauge(name="PM10",df_last=df_last) %>% as_widget()})
         }
         if(!is.null(filtered_df$NH3)||!is.null(filtered_df$Reducing)||!is.null(filtered_df$Oxidising)) {
-          output$gauge_nh3<-renderUI({plot_gauge(name="NH3") %>% as_widget()})
-          output$gauge_reducing<-renderUI({plot_gauge(name="Reducing") %>% as_widget()})
-          output$gauge_oxidising<-renderUI({plot_gauge(name="Oxidising") %>% as_widget()})
+          output$gauge_nh3<-renderUI({plot_gauge(name="NH3",df_last=df_last) %>% as_widget()})
+          output$gauge_reducing<-renderUI({plot_gauge(name="Reducing",df_last=df_last) %>% as_widget()})
+          output$gauge_oxidising<-renderUI({plot_gauge(name="Oxidising",df_last=df_last) %>% as_widget()})
         }
       })
     })
