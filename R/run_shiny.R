@@ -11,18 +11,10 @@
 #' pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                           "http://pip1.crabdance.com:1505/api/v1/query_range"))
 pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
-  ##########################################################################################
-  # LOAD
-  ##########################################################################################
   library(shiny)
   library(shinydashboard)
-  library(httr)
-  library(jsonlite)
-  library(xts)
-  library(zoo)
   library(plotly)
   options(scipen=999)
-  # source("prometheus_url.R")
   Sys.setenv(TZ=timezone)
   ##########################################################################################
   #

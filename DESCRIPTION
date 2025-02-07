@@ -9,4 +9,4 @@ Encoding: UTF-8
 LazyData: true
 Author: Dimitrios Zacharatos [aut, cre]
 Maintainer: Dimitrios Zacharatos <dimitrios@psycholate.com>
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
