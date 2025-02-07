@@ -18,9 +18,9 @@ installation instructions can be found here: https://posit.co/downloads/
 
 open RStudio and type in the console:
 ```
-install.packages("devtools")  
-library(devtools)  
-install_github("sedzinfo/enviro")  
+install.packages("devtools")
+library(devtools)
+install_github("sedzinfo/enviro")
 ```
 
 # Usage
