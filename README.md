@@ -44,7 +44,7 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 
 ![Stars](https://img.shields.io/github/stars/sedzinfo/enviro)
 ![Watchers](https://img.shields.io/github/watchers/sedzinfo/enviro)
-![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/enviro)  
+![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/enviro)
 ![Open Issues](https://img.shields.io/github/issues/sedzinfo/enviro)
 ![Forks](https://img.shields.io/github/forks/sedzinfo/enviro)
 ![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/enviro)
