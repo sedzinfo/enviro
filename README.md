@@ -39,3 +39,16 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 # Screenshots
 ![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/enviro1.png)
 ![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/enviro2.png)
+
+---
+
+![Stars](https://img.shields.io/github/stars/sedzinfo/enviro)
+![Watchers](https://img.shields.io/github/watchers/sedzinfo/enviro)
+![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/enviro)  
+![Open Issues](https://img.shields.io/github/issues/sedzinfo/enviro)
+![Forks](https://img.shields.io/github/forks/sedzinfo/enviro)
+![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/enviro)
+![Contributors](https://img.shields.io/github/contributors/sedzinfo/enviro)
+![License](https://img.shields.io/github/license/sedzinfo/enviro)
+![Release](https://img.shields.io/github/v/release/sedzinfo/enviro)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/main.yml)
