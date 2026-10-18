@@ -50,5 +50,4 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 ![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/enviro)
 ![Contributors](https://img.shields.io/github/contributors/sedzinfo/enviro)
 ![License](https://img.shields.io/github/license/sedzinfo/enviro)
-![Release](https://img.shields.io/github/v/release/sedzinfo/enviro)
-![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/main.yml)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/build-tarball.yml)
