@@ -7,7 +7,9 @@ export(plot_time_series)
 import(plotly)
 import(shiny)
 import(shinydashboard)
-importFrom(httr,GET)
-importFrom(httr,content)
+importFrom(httr,
+  GET,
+  content
+)
 importFrom(jsonlite,fromJSON)
 importFrom(zoo,rollmean)
