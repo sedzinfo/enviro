@@ -6,10 +6,23 @@
 # R CMD build enviro --resave-data
 library(devtools)
 library(roxygen2)
-directory<-paste0(dirname(rstudioapi::getActiveDocumentContext()$path),"/")
+rm(list = ls())
+graphics.off()
+cat("\014")
+##########################################################################################
+# FUNCTIONS PACKAGE
+##########################################################################################
+directory <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(directory)
-# usethis::create_package("crypto")
+# usethis::create_package("enviro")
 document()
+if ("enviro" %in% rownames(installed.packages())) remove.packages("enviro")
 install()
 library(enviro)
-pimoroni()
+
+pkgdown::build_site(getwd())
+system("R CMD Rd2pdf . --force --no-preview --output=enviro.pdf")
+if (.Platform$OS.type == "windows") shell.exec("enviro.pdf") else system("evince enviro.pdf")
+system("R CMD build . --resave-data")
+
+pimoroni() # starts the app: the console stays busy until you close it
