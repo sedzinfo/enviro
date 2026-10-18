@@ -15,7 +15,7 @@ pimoroni(prometheus_url, timezone = "Europe/Bucharest")
 enviro
 }
 \examples{
-pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
+if (interactive()) pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
                           "http://pip1.crabdance.com:1505/api/v1/query_range"))
 }
 \keyword{enviro}

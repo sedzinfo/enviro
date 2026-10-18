@@ -1,8 +1,8 @@
 # enviro
 Displays data of pimoroni enviro from prometheus
 
-![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/pimoroni_front.png)
-![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/pimoroni_back.png)
+![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/pimoroni_front.png)
+![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/pimoroni_back.png)
 
 ## Examples of how to setup your own Pimoroni Enviro
 [Getting Started with Enviro Plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)  
@@ -37,8 +37,8 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 ```
 
 # Screenshots
-![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/enviro1.png)
-![Alt text](https://github.com/sedzinfo/enviro/blob/main/screenshots/enviro2.png)
+![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro1.png)
+![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro2.png)
 
 ---
 

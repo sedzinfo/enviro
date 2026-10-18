@@ -242,7 +242,7 @@ plot_gauge<-function(data=filtered_df,variable="Temperature") {
 #' @keywords pimoroni enviro
 #' @export
 #' @examples
-#' pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
+#' if (interactive()) pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                           "http://pip1.crabdance.com:1505/api/v1/query_range"))
 pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
   library(shiny)
