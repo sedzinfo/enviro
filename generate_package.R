@@ -16,6 +16,7 @@ directory <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(directory)
 # usethis::create_package("enviro")
 document()
+if ("enviro" %in% loadedNamespaces()) unloadNamespace("enviro") # an old version still loaded would make the reinstalled one look corrupt
 if ("enviro" %in% rownames(installed.packages())) remove.packages("enviro")
 install()
 library(enviro)
