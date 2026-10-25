@@ -1,15 +1,25 @@
 ##########################################################################################
 # GET DATA
 ##########################################################################################
+# metrics that the Pimoroni Enviro and Enviro+ export to Prometheus
+metrics<-c("temperature","humidity","pressure","lux","proximity","NH3","reducing","oxidising","PM1","PM25","PM10")
+# column names of the metrics in the data from get_data()
+metric_names<-c(date="Date",timestamp="Timestamp",temperature="Temperature",humidity="Humidity",
+                pressure="Pressure",lux="Lux",proximity="Proximity",reducing="Reducing",
+                oxidising="Oxidising",PM25="PM2.5")
 #' @title Get Data from Prometheus
 #' @param start_time start time in this format: "2025-01-31T11:48:08Z"
 #' @param end_time end time in this format: "2025-02-07T11:48:33Z"
 #' @param urlq Prometheus url
+#' @return A data frame with the Date and the Timestamp of the readings and one column per sensor,
+#'   or NULL, with a message, when the server cannot be reached or sends no data. Sensors whose
+#'   readings never change are left out, as the device does not have them.
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr GET content
 #' @keywords prometheus query
 #' @export
 #' @examples
+#' \dontrun{
 #' prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 #' start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
@@ -18,45 +28,57 @@
 #' head(filtered_df)
 #' filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
 #' head(filtered_df)
+#' }
 get_data<-function(start_time=format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ"),
                    end_time=format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"),
-                   urlq=prometheus_url[1]) {
-  query<<-c("temperature","humidity","pressure","lux","proximity","NH3","reducing","oxidising","PM1","PM25","PM10")
+                   urlq) {
   time_step<-paste0(as.numeric(round(diff(seq(as.POSIXct(start_time),as.POSIXct(end_time),length.out=1000)),0),units="mins"),"m")[1]
   xtsdf<-list()
-  for(qm in query) {
-    response<-httr::GET(urlq,
-                        query=list(query=qm,
-                                   start=start_time,
-                                   end=end_time,
-                                   step=time_step))
+  for(qm in metrics) {
+    response<-tryCatch(httr::GET(urlq,
+                                 query=list(query=qm,
+                                            start=start_time,
+                                            end=end_time,
+                                            step=time_step),
+                                 httr::timeout(15)),
+                       error=function(e) e)
+    # a server that is offline fails on the first metric: stop there instead of waiting for each one
+    if(inherits(response,"error")||httr::http_error(response)) {
+      message("Could not get data from ",urlq,": ",
+              if(inherits(response,"error")) conditionMessage(response) else httr::http_status(response)$message)
+      return(NULL)
+    }
     query_result<-httr::content(response,as="text",encoding="UTF-8")
-    query_result_json<-jsonlite::fromJSON(query_result,flatten=TRUE,simplifyDataFrame=TRUE)
-    time_series_data<-list()
-    for(i in length(query_result_json$data$result$values))
-      time_series_data<-plyr::rbind.fill(query_result_json$data$result$values[[i]])
-    time_series_data<-data.frame(time_series_data)
-    time_series_data<-data.frame(date=as.POSIXct(as.numeric(time_series_data[,1])),
-                                 timestamp=as.numeric(time_series_data[,1]),
-                                 value=as.numeric(time_series_data[,2]))
+    query_result_json<-tryCatch(jsonlite::fromJSON(query_result,flatten=TRUE,simplifyDataFrame=TRUE),error=function(e) NULL)
+    values<-query_result_json$data$result$values
+    if(length(values)==0) next
+    # a metric can come in several series, for example after a restart: keep them all
+    series<-lapply(values,function(v) data.frame(timestamp=as.numeric(v[,1]),value=as.numeric(v[,2])))
+    time_series_data<-do.call(rbind,series)
+    if(length(series)>1)
+      time_series_data<-stats::aggregate(time_series_data["value"],by=time_series_data["timestamp"],FUN=mean)
+    time_series_data<-data.frame(date=as.POSIXct(time_series_data$timestamp),
+                                 timestamp=time_series_data$timestamp,
+                                 value=time_series_data$value)
     names(time_series_data)<-c("date","timestamp",qm)
     xtsdf[[qm]]<-time_series_data
   }
+  if(length(xtsdf)==0) {
+    message("No data from ",urlq)
+    return(NULL)
+  }
   filtered_df<-dfr<-Reduce(function(x,y) merge(x,y,by=c("date","timestamp"),all=TRUE),xtsdf)
-  cn<-data.frame(names=names(dfr),sd=sapply(dfr,sd,na.rm=TRUE))
-  filtered_df[,cn[cn$sd==0,]$names]<-NULL
-  names(filtered_df)[1:7]<-paste0(toupper(substr(names(filtered_df)[1:7],1,1)),
-                             tolower(substring(names(filtered_df)[1:7],2)))
-  names(filtered_df)[grep("PM25",names(filtered_df))]<-"PM2.5"
-  names(filtered_df)[grep("reducing",names(filtered_df))]<-"Reducing"
-  names(filtered_df)[grep("oxidising",names(filtered_df))]<-"Oxidising"
+  cn<-data.frame(names=names(dfr),sd=sapply(dfr,stats::sd,na.rm=TRUE))
+  filtered_df[,cn[cn$sd%in%0,]$names]<-NULL
+  renamed<-names(filtered_df)%in%names(metric_names)
+  names(filtered_df)[renamed]<-metric_names[names(filtered_df)[renamed]]
   return(filtered_df)
 }
 ##########################################################################################
 # PLOT TIME SERIES
 ##########################################################################################
 #' @title Plot Time Series
-#' @param data start time in this format: "2025-01-31T11:48:08Z"
+#' @param data data frame from get_data()
 #' @param variable one of "Temperature" "Humidity" "Pressure" "Lux" "Proximity" "NH3" "Reducing" "Oxidising" "PM1" "PM2.5" "PM10"
 #' @param scale scale
 #' @param k integer width of the rolling window. Must be odd for rollmedian
@@ -65,6 +87,7 @@ get_data<-function(start_time=format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
 #' @keywords plot timeseries
 #' @export
 #' @examples
+#' \dontrun{
 #' prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 #' start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
@@ -84,13 +107,14 @@ get_data<-function(start_time=format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
 #' plot_time_series(data=filtered_df,variable="PM1")
 #' plot_time_series(data=filtered_df,variable="PM2.5")
 #' plot_time_series(data=filtered_df,variable="PM10")
-plot_time_series<-function(data=filtered_df,variable="Temperature",scale="",k=30) {
+#' }
+plot_time_series<-function(data,variable="Temperature",scale="",k=30) {
   smoothed<-zoo::rollmean(as.numeric(data[,variable]),k=k,align="center",fill=NA)
   current_value<-round(as.numeric(data[nrow(data),variable]),2)
   mean_value<-round(mean(as.numeric(data[,variable]),na.rm=TRUE),2)
   min_value<-round(min(as.numeric(data[,variable]),na.rm=TRUE),2)
   max_value<-round(max(as.numeric(data[,variable]),na.rm=TRUE),2)
-  sd_value<-round(sd(as.numeric(data[,variable]),na.rm=TRUE),2)
+  sd_value<-round(stats::sd(as.numeric(data[,variable]),na.rm=TRUE),2)
   range_value<-round(max_value-min_value,2)
   plot_ts<-plot_ly(data=data,
                    x=data[,"Date"],
@@ -115,10 +139,10 @@ plot_time_series<-function(data=filtered_df,variable="Temperature",scale="",k=30
                  name="Mean") %>%
     add_annotations(text=paste("\n\n",
                                "last:",current_value,"\n\n",
-                               "μ:",mean_value,"\n",
+                               "\u03bc:",mean_value,"\n",
                                "min:",min_value,"\n",
                                "max:",max_value,"\n",
-                               "σ:",sd_value,"\n",
+                               "\u03c3:",sd_value,"\n",
                                "range:",range_value,"\n\n",
                                "Start:",min(format(data[,"Date"],"%Y-%m-%d")),"\n",
                                "Stop:",max(format(data[,"Date"],"%Y-%m-%d")),"\n"),
@@ -151,6 +175,7 @@ plot_time_series<-function(data=filtered_df,variable="Temperature",scale="",k=30
 #' @keywords plot gauge
 #' @export
 #' @examples
+#' \dontrun{
 #' prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 #' start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
@@ -170,7 +195,8 @@ plot_time_series<-function(data=filtered_df,variable="Temperature",scale="",k=30
 #' plot_gauge(data=filtered_df,variable="PM1")
 #' plot_gauge(data=filtered_df,variable="PM2.5")
 #' plot_gauge(data=filtered_df,variable="PM10")
-plot_gauge<-function(data=filtered_df,variable="Temperature") {
+#' }
+plot_gauge<-function(data,variable="Temperature") {
   help_pm1<-"Ultra fine particles"
   help_pm25<-"Combustion particles,Organic compounds,Metals"
   help_pm10<-"Dust,Pollen,Mould spores"
@@ -179,33 +205,33 @@ plot_gauge<-function(data=filtered_df,variable="Temperature") {
   help_oxidising<-"Mostly Nitrogen Dioxide,\n NO,Hydrogen"
   names<-c("Temperature","Humidity","Pressure","Lux","Proximity",
            "NH3","Reducing","Oxidising","PM1","PM2.5","PM10")
-  scale<-c("°C","%","hPa","Lux",NA,"Ohms","Ohms","Ohms","ug/m3","ug/m3","ug/m3")
+  scale<-c("\u00b0C","%","hPa","Lux",NA,"Ohms","Ohms","Ohms","ug/m3","ug/m3","ug/m3")
   range_ideal_min<-c(20,40,1010,1000,0,NA,NA,NA,0,0,0)
   range_ideal_max<-c(25,60,1015,1500,1,NA,NA,NA,20,20,20)
   point_ideal<-c(24,50,1013,1200,NA,NA,NA,NA,0,0,0)
   range_min<-c(-50,0,900,0,0,NA,NA,NA,0,0,0)
   range_max<-c(50,100,1100,10000,10,NA,NA,NA,400,400,400)
   help<-c(rep("",5),help_NH3,help_reducing,help_oxidising,help_pm1,help_pm25,help_pm10)
-  df_reference<-data.frame(query=query,names=names,scale,range_min,range_max,range_ideal_min,range_ideal_max,point_ideal,help=help)
+  df_reference<-data.frame(query=metrics,names=names,scale,range_min,range_max,range_ideal_min,range_ideal_max,point_ideal,help=help)
   dflast<-data[data$Timestamp%in%max(data$Timestamp),]
   last_value<-dflast[,variable]
   value_mean<-mean(dflast[,variable],na.rm=TRUE)
-  value_sd<-sd(dflast[,variable],na.rm=TRUE)
+  value_sd<-stats::sd(dflast[,variable],na.rm=TRUE)
   value_max<-max(dflast[,variable])
   value_min<-min(dflast[,variable])
   reference<-df_reference[df_reference$names%in%variable,]
-  
+
   range<-c(reference$range_min,reference$range_max)
   range_ideal<-c(reference$range_ideal_min,reference$range_ideal_max)
   point_ideal<-reference$point_ideal
-  
-  if(unique(is.na(range)))
+
+  if(anyNA(range))
     range<-c(value_min-value_sd,value_max+value_sd)
-  if(unique(is.na(range_ideal)))
+  if(anyNA(range_ideal))
     range_ideal<-c(value_mean-value_sd,value_mean+value_sd)
   if(is.na(point_ideal))
     point_ideal<-value_mean
-  
+
   plot_g<-plot_ly(type="indicator",
                   mode="gauge+number+delta",
                   value=last_value,
@@ -245,10 +271,6 @@ plot_gauge<-function(data=filtered_df,variable="Temperature") {
 #' if (interactive()) pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
 #'                           "http://pip1.crabdance.com:1505/api/v1/query_range"))
 pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
-  library(shiny)
-  library(shinydashboard)
-  options(scipen=999)
-  Sys.setenv(TZ=timezone)
   ui<-tagList(htmltools::htmlDependencies(icon("")),
               tags$style(".custom-label { display: inline-block; width: 150px; vertical-align: top; }
                         .plot-zoom {
@@ -324,55 +346,75 @@ pimoroni<-function(prometheus_url,timezone="Europe/Bucharest") {
                                   )))
               ))
   server<-function(input,output) {
-    observeEvent(list(input$days,input$server_timeseries), {
-      observe({
-        start_time<-format(Sys.time()-as.numeric(input$days)*60*60*24,"%Y-%m-%dT%H:%M:%SZ")
-        filtered_df<-get_data(start_time=start_time,end_time=format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"),urlq=input$server_timeseries)
-        scale_pm<-"micrograms per cubic metre (ug/m3)"
-        scale_g<-"Ohms"
-        output$plot_temperature<-renderPlotly({plot_time_series(data=filtered_df,variable="Temperature",scale="°C") %>% as_widget()})
-        output$plot_humidity<-renderPlotly({plot_time_series(data=filtered_df,variable="Humidity",scale="Relative humidity (%)") %>% as_widget()})
-        output$plot_pressure<-renderPlotly({plot_time_series(data=filtered_df,variable="Pressure",scale="hPa") %>% as_widget()})
-        output$plot_lux<-renderPlotly({plot_time_series(data=filtered_df,variable="Lux",scale="LUX") %>% as_widget()})
-        output$plot_proximity<-renderPlotly({plot_time_series(data=filtered_df,variable="Proximity") %>% as_widget()})
-        if(!is.null(filtered_df$PM1)||!is.null(filtered_df$PM2.5)||!is.null(filtered_df$PM10)) {
-          output$plot_pm1<-renderUI({plot_time_series(data=filtered_df,variable="PM1",scale=scale_pm) %>% as_widget()})
-          output$plot_pm25<-renderUI({plot_time_series(data=filtered_df,variable="PM2.5",scale=scale_pm) %>% as_widget()})
-          output$plot_pm10<-renderUI({plot_time_series(data=filtered_df,variable="PM10",scale=scale_pm) %>% as_widget()})
-        }
-        if(!is.null(filtered_df$NH3)||!is.null(filtered_df$Reducing)||!is.null(filtered_df$Oxidising)) {
-          output$plot_nh3<-renderUI({plot_time_series(data=filtered_df,variable="NH3",scale=scale_g) %>% as_widget()})
-          output$plot_reducing<-renderUI({plot_time_series(data=filtered_df,variable="Reducing",scale=scale_g) %>% as_widget()})
-          output$plot_oxidising<-renderUI({plot_time_series(data=filtered_df,variable="Oxidising",scale=scale_g) %>% as_widget()})
-        }
-      })
+    # each tab downloads its data again when its server or number of days changes
+    timeseries_data<-reactive({
+      start_time<-format(Sys.time()-as.numeric(input$days)*60*60*24,"%Y-%m-%dT%H:%M:%SZ")
+      get_data(start_time=start_time,end_time=format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"),urlq=input$server_timeseries)
     })
-    observeEvent(list(input$server_gauge), {
-      observe({
-        start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
-        filtered_df<-get_data(start_time=start_time,end_time=format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"),urlq=input$server_gauge)
-        # filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
-        df_last<-filtered_df[filtered_df$Timestamp%in%max(filtered_df$Timestamp),]
-        output$last_date<-renderText(format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"))
-        output$gauge_temperature<-renderPlotly({plot_gauge(variable="Temperature",data=df_last) %>% as_widget()})
-        output$gauge_humidity<-renderPlotly({plot_gauge(variable="Humidity",data=df_last) %>% as_widget()})
-        output$gauge_pressure<-renderPlotly({plot_gauge(variable="Pressure",data=df_last) %>% as_widget()})
-        output$gauge_lux<-renderPlotly({plot_gauge(variable="Lux",data=df_last) %>% as_widget()})
-        output$gauge_proximity<-renderPlotly({plot_gauge(variable="Proximity",data=df_last) %>% as_widget()})
-        if(!is.null(filtered_df$PM1)||!is.null(filtered_df$PM2.5)||!is.null(filtered_df$PM10)) {
-          output$gauge_pm1<-renderUI({plot_gauge(variable="PM1",data=df_last) %>% as_widget()})
-          output$gauge_pm25<-renderUI({plot_gauge(variable="PM2.5",data=df_last) %>% as_widget()})
-          output$gauge_pm10<-renderUI({plot_gauge(variable="PM10",data=df_last) %>% as_widget()})
-        }
-        if(!is.null(filtered_df$NH3)||!is.null(filtered_df$Reducing)||!is.null(filtered_df$Oxidising)) {
-          output$gauge_nh3<-renderUI({plot_gauge(variable="NH3",data=df_last) %>% as_widget()})
-          output$gauge_reducing<-renderUI({plot_gauge(variable="Reducing",data=df_last) %>% as_widget()})
-          output$gauge_oxidising<-renderUI({plot_gauge(variable="Oxidising",data=df_last) %>% as_widget()})
-        }
-      })
+    gauge_data<-reactive({
+      start_time<-format(Sys.time()-60*60*24*7,"%Y-%m-%dT%H:%M:%SZ")
+      get_data(start_time=start_time,end_time=format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ"),urlq=input$server_gauge)
     })
+    # the rows of the last reading, for the gauges
+    last_reading<-reactive({
+      filtered_df<-gauge_data()
+      validate(need(filtered_df,paste("The Prometheus server",input$server_gauge,"cannot be reached right now")))
+      filtered_df[filtered_df$Timestamp%in%max(filtered_df$Timestamp),]
+    })
+    # an output for each sensor, left empty when the device does not have the sensor
+    plot_output<-function(variable,scale="",render=renderPlotly) {
+      render({
+        filtered_df<-timeseries_data()
+        validate(need(filtered_df,paste("The Prometheus server",input$server_timeseries,"cannot be reached right now")))
+        req(variable%in%names(filtered_df))
+        plot_time_series(data=filtered_df,variable=variable,scale=scale) %>% as_widget()
+      })
+    }
+    gauge_output<-function(variable,render=renderPlotly) {
+      render({
+        df_last<-last_reading()
+        req(variable%in%names(df_last))
+        plot_gauge(variable=variable,data=df_last) %>% as_widget()
+      })
+    }
+    scale_pm<-"micrograms per cubic metre (ug/m3)"
+    scale_g<-"Ohms"
+    output$plot_temperature<-plot_output("Temperature",scale="\u00b0C")
+    output$plot_humidity<-plot_output("Humidity",scale="Relative humidity (%)")
+    output$plot_pressure<-plot_output("Pressure",scale="hPa")
+    output$plot_lux<-plot_output("Lux",scale="LUX")
+    output$plot_proximity<-plot_output("Proximity")
+    output$plot_pm1<-plot_output("PM1",scale=scale_pm,render=renderUI)
+    output$plot_pm25<-plot_output("PM2.5",scale=scale_pm,render=renderUI)
+    output$plot_pm10<-plot_output("PM10",scale=scale_pm,render=renderUI)
+    output$plot_nh3<-plot_output("NH3",scale=scale_g,render=renderUI)
+    output$plot_reducing<-plot_output("Reducing",scale=scale_g,render=renderUI)
+    output$plot_oxidising<-plot_output("Oxidising",scale=scale_g,render=renderUI)
+    output$last_date<-renderText({
+      gauge_data()
+      format(Sys.time(),"%Y-%m-%dT%H:%M:%SZ")
+    })
+    output$gauge_temperature<-gauge_output("Temperature")
+    output$gauge_humidity<-gauge_output("Humidity")
+    output$gauge_pressure<-gauge_output("Pressure")
+    output$gauge_lux<-gauge_output("Lux")
+    output$gauge_proximity<-gauge_output("Proximity")
+    output$gauge_pm1<-gauge_output("PM1",render=renderUI)
+    output$gauge_pm25<-gauge_output("PM2.5",render=renderUI)
+    output$gauge_pm10<-gauge_output("PM10",render=renderUI)
+    output$gauge_nh3<-gauge_output("NH3",render=renderUI)
+    output$gauge_reducing<-gauge_output("Reducing",render=renderUI)
+    output$gauge_oxidising<-gauge_output("Oxidising",render=renderUI)
   }
-  shinyApp(ui=ui,server=server)
+  shinyApp(ui=ui,server=server,
+           onStart=function() {
+             # for this app run only: times in the time zone of the data, and small values in full
+             old_options<-options(scipen=999)
+             old_tz<-Sys.getenv("TZ",unset=NA)
+             Sys.setenv(TZ=timezone)
+             onStop(function() {
+               options(old_options)
+               if(is.na(old_tz)) Sys.unsetenv("TZ") else Sys.setenv(TZ=old_tz)
+             })
+           })
 }
-
-

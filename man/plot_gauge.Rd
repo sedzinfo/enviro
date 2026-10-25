@@ -4,7 +4,7 @@
 \alias{plot_gauge}
 \title{Plot Gauge}
 \usage{
-plot_gauge(data = filtered_df, variable = "Temperature")
+plot_gauge(data, variable = "Temperature")
 }
 \arguments{
 \item{data}{dataframe}
@@ -15,6 +15,7 @@ plot_gauge(data = filtered_df, variable = "Temperature")
 Plot Gauge
 }
 \examples{
+\dontrun{
 prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 start_time<-format(Sys.time()-60*60*24*7,"\%Y-\%m-\%dT\%H:\%M:\%SZ")
@@ -34,6 +35,7 @@ plot_gauge(data=filtered_df,variable="Oxidising")
 plot_gauge(data=filtered_df,variable="PM1")
 plot_gauge(data=filtered_df,variable="PM2.5")
 plot_gauge(data=filtered_df,variable="PM10")
+}
 }
 \keyword{gauge}
 \keyword{plot}

@@ -26,4 +26,5 @@ system("R CMD Rd2pdf . --force --no-preview --output=enviro.pdf")
 if (.Platform$OS.type == "windows") shell.exec("enviro.pdf") else system("evince enviro.pdf")
 system("R CMD build . --resave-data")
 
-pimoroni() # starts the app: the console stays busy until you close it
+pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
+                          "http://pip1.crabdance.com:1505/api/v1/query_range"))

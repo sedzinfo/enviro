@@ -4,15 +4,10 @@
 \alias{plot_time_series}
 \title{Plot Time Series}
 \usage{
-plot_time_series(
-  data = filtered_df,
-  variable = "Temperature",
-  scale = "",
-  k = 30
-)
+plot_time_series(data, variable = "Temperature", scale = "", k = 30)
 }
 \arguments{
-\item{data}{start time in this format: "2025-01-31T11:48:08Z"}
+\item{data}{data frame from get_data()}
 
 \item{variable}{one of "Temperature" "Humidity" "Pressure" "Lux" "Proximity" "NH3" "Reducing" "Oxidising" "PM1" "PM2.5" "PM10"}
 
@@ -24,6 +19,7 @@ plot_time_series(
 Plot Time Series
 }
 \examples{
+\dontrun{
 prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 start_time<-format(Sys.time()-60*60*24*7,"\%Y-\%m-\%dT\%H:\%M:\%SZ")
@@ -43,6 +39,7 @@ plot_time_series(data=filtered_df,variable="Oxidising")
 plot_time_series(data=filtered_df,variable="PM1")
 plot_time_series(data=filtered_df,variable="PM2.5")
 plot_time_series(data=filtered_df,variable="PM10")
+}
 }
 \keyword{plot}
 \keyword{timeseries}

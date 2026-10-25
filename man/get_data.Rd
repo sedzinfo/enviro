@@ -7,7 +7,7 @@
 get_data(
   start_time = format(Sys.time() - 60 * 60 * 24 * 7, "\%Y-\%m-\%dT\%H:\%M:\%SZ"),
   end_time = format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ"),
-  urlq = prometheus_url[1]
+  urlq
 )
 }
 \arguments{
@@ -17,10 +17,16 @@ get_data(
 
 \item{urlq}{Prometheus url}
 }
+\value{
+A data frame with the Date and the Timestamp of the readings and one column per sensor,
+  or NULL, with a message, when the server cannot be reached or sends no data. Sensors whose
+  readings never change are left out, as the device does not have them.
+}
 \description{
 Get Data from Prometheus
 }
 \examples{
+\dontrun{
 prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range",
                  "http://pip1.crabdance.com:1505/api/v1/query_range")
 start_time<-format(Sys.time()-60*60*24*7,"\%Y-\%m-\%dT\%H:\%M:\%SZ")
@@ -29,6 +35,7 @@ filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_ur
 head(filtered_df)
 filtered_df<-get_data(start_time=start_time,end_time=end_time,urlq=prometheus_url[1])
 head(filtered_df)
+}
 }
 \keyword{prometheus}
 \keyword{query}

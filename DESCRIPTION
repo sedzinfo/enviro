@@ -3,7 +3,8 @@ Title: Displays data of pimoroni enviro from prometheus
 Version: 0.0.0.9000
 Authors@R: person("Dimitrios","Zacharatos",,"dzacharatos@yahoo.com",role=c("aut","cre"),comment=c(ORCID="0000-0003-1789-8294"))
 Description: Displays data of pimoroni enviro and pimoroni enviro + exported from prometheus
-Depends: shiny,shinydashboard,httr,jsonlite,xts,zoo,plotly
+Depends: shiny,shinydashboard,httr,jsonlite,zoo,plotly
+Imports: htmltools,stats
 License: GPL-3
 URL: https://sedzinfo.github.io/enviro/, https://github.com/sedzinfo/enviro
 BugReports: https://github.com/sedzinfo/enviro/issues
@@ -11,4 +12,4 @@ Encoding: UTF-8
 LazyData: true
 Author: Dimitrios Zacharatos [aut, cre]
 Maintainer: Dimitrios Zacharatos <dzacharatos@yahoo.com>
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
