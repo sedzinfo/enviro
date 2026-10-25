@@ -21,7 +21,7 @@ with a full screen button (see \code{inst/app/www/plot_zoom.js}).
 \examples{
 \dontrun{
 shiny::fluidPage(
-  enviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
+  golemenviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
 )
 }
 }

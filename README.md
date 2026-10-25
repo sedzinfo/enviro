@@ -1,8 +1,8 @@
-# enviro
+# golemenviro
 Displays data of pimoroni enviro from prometheus
 
-![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/pimoroni_front.png)
-![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/pimoroni_back.png)
+![Alt text](https://github.com/sedzinfo/golemenviro/raw/main/screenshots/pimoroni_front.png)
+![Alt text](https://github.com/sedzinfo/golemenviro/raw/main/screenshots/pimoroni_back.png)
 
 ## Examples of how to setup your own Pimoroni Enviro
 [Getting Started with Enviro Plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)  
@@ -23,12 +23,12 @@ open RStudio and type in the console:
 ```
 install.packages("devtools")
 library(devtools)
-install_github("sedzinfo/enviro")
+install_github("sedzinfo/golemenviro")
 ```
 
 # Usage
 ```
-library(enviro)
+library(golemenviro)
 ```
 
 substitute the url from your prometheus server  
@@ -39,8 +39,8 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 When a server cannot be reached, its gauges and charts say so instead of showing an error, and `get_data()` returns `NULL` with a message.
 
 # Screenshots
-![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro1.png)
-![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro2.png)
+![Alt text](https://github.com/sedzinfo/golemenviro/raw/main/screenshots/enviro1.png)
+![Alt text](https://github.com/sedzinfo/golemenviro/raw/main/screenshots/enviro2.png)
 
 # Development
 
@@ -65,13 +65,13 @@ Run the tests with `devtools::test()`, and the full package check with `devtools
 
 ---
 
-![Stars](https://img.shields.io/github/stars/sedzinfo/enviro)
-![Watchers](https://img.shields.io/github/watchers/sedzinfo/enviro)
-![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/enviro)
-![Open Issues](https://img.shields.io/github/issues/sedzinfo/enviro)
-![Forks](https://img.shields.io/github/forks/sedzinfo/enviro)
-![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/enviro)
-![Contributors](https://img.shields.io/github/contributors/sedzinfo/enviro)
-![License](https://img.shields.io/github/license/sedzinfo/enviro)
-![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/build-tarball.yml)
-![R-CMD-check](https://github.com/sedzinfo/enviro/actions/workflows/R-CMD-check.yaml/badge.svg)
+![Stars](https://img.shields.io/github/stars/sedzinfo/golemenviro)
+![Watchers](https://img.shields.io/github/watchers/sedzinfo/golemenviro)
+![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/golemenviro)
+![Open Issues](https://img.shields.io/github/issues/sedzinfo/golemenviro)
+![Forks](https://img.shields.io/github/forks/sedzinfo/golemenviro)
+![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/golemenviro)
+![Contributors](https://img.shields.io/github/contributors/sedzinfo/golemenviro)
+![License](https://img.shields.io/github/license/sedzinfo/golemenviro)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/golemenviro/build-tarball.yml)
+![R-CMD-check](https://github.com/sedzinfo/golemenviro/actions/workflows/R-CMD-check.yaml/badge.svg)

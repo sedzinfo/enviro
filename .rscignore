@@ -2,7 +2,7 @@
 .Rbuildignore
 _pkgdown.yml
 docs
-enviro.pdf
+golemenviro.pdf
 enviro_0.0.0.9000.tar.gz
 generate_package.R
 LICENSE

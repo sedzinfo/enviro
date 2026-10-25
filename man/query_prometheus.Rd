@@ -27,7 +27,7 @@ Query one metric from Prometheus
 }
 \examples{
 \dontrun{
-enviro:::query_prometheus(
+golemenviro:::query_prometheus(
   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
   format(Sys.time() - 3600, "\%Y-\%m-\%dT\%H:\%M:\%SZ"), format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ"), "1m"
 )

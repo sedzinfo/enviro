@@ -1,4 +1,4 @@
 library(testthat)
-library(enviro)
+library(golemenviro)
 
-test_check("enviro")
+test_check("golemenviro")

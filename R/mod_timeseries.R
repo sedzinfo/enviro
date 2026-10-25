@@ -16,7 +16,7 @@
 #' @examples
 #' \dontrun{
 #' shiny::fluidPage(
-#'   enviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
+#'   golemenviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
 #' )
 #' }
 mod_timeseries_ui <- function(id, prometheus_url) {

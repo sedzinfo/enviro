@@ -32,7 +32,7 @@ jobs:
 
       - name: Build tarball
         run: |
-          rm -f enviro_*.tar.gz                   # drop the old build (also an old version number)
+          rm -f golemenviro_*.tar.gz                   # drop the old build (also an old version number)
           R CMD build . --resave-data --no-build-vignettes --no-manual
 
       - uses: r-lib/actions/setup-tinytex@v2
@@ -43,13 +43,13 @@ jobs:
           tlmgr install inconsolata upquote makeindex
 
       - name: Build PDF manual
-        run: R CMD Rd2pdf . --force --no-preview --output=enviro.pdf
+        run: R CMD Rd2pdf . --force --no-preview --output=golemenviro.pdf
 
       - name: Commit tarball and manual
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- "enviro_*.tar.gz" enviro.pdf
+          git add -A -- "golemenviro_*.tar.gz" golemenviro.pdf
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "Rebuild package tarball and manual [skip ci]"
           git pull --rebase -X theirs             # if a push during the build changed these files, keep the ones built here
