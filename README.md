@@ -1,4 +1,4 @@
-# Data Visualization for Enviro using Prometheus
+# Data Visualization for Enviro Using Prometheus
 Displays data of pimoroni enviro from prometheus
 
 ![Alt text](https://github.com/sedzinfo/golemenviro/raw/main/screenshots/pimoroni_front.png)
