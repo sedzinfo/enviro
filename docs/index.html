@@ -13,8 +13,8 @@
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Displays data of pimoroni enviro from prometheus">
-<meta name="description" content="Displays data of pimoroni enviro and pimoroni enviro + exported from prometheus">
-<meta property="og:description" content="Displays data of pimoroni enviro and pimoroni enviro + exported from prometheus">
+<meta name="description" content="A Shiny application, built as a golem package, that displays the readings of Pimoroni Enviro and Enviro+ sensors exported to Prometheus: gauges with the latest readings, and a time series chart per sensor.">
+<meta property="og:description" content="A Shiny application, built as a golem package, that displays the readings of Pimoroni Enviro and Enviro+ sensors exported to Prometheus: gauges with the latest readings, and a time series chart per sensor.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -77,22 +77,92 @@ installation instructions can be found here: <a href="https://posit.co/downloads
 <div class="section level1">
 <h1 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h1>
-<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">enviro</span><span class="op">)</span></span></code></pre>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sedzinfo.github.io/enviro/">enviro</a></span><span class="op">)</span></span></code></pre>
 <p>substitute the url from your prometheus server</p>
 <pre><code><span><span class="fu"><a href="reference/pimoroni.html">pimoroni</a></span><span class="op">(</span>prometheus_url<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"http://pip1.crabdance.com:1507/api/v1/query_range"</span>,<span class="st">"http://pip1.crabdance.com:1505/api/v1/query_range"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<p>When a server cannot be reached, its gauges and charts say so instead of showing an error, and <code><a href="reference/get_data.html">get_data()</a></code> returns <code>NULL</code> with a message.</p>
 </div>
 <div class="section level1">
 <h1 id="screenshots">Screenshots<a class="anchor" aria-label="anchor" href="#screenshots"></a>
 </h1>
 <p><img src="https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro1.png" alt="Alt text"><img src="https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro2.png" alt="Alt text"></p>
+</div>
+<div class="section level1">
+<h1 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
+</h1>
+<p>The package is a <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a> app:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>File</th>
+<th>Contents</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>R/run_app.R</code></td>
+<td>
+<code><a href="reference/pimoroni.html">pimoroni()</a></code>, which starts the app</td>
+</tr>
+<tr>
+<td>
+<code>R/app_ui.R</code>, <code>R/app_server.R</code>
+</td>
+<td>The navbar page and the server, which connect the modules</td>
+</tr>
+<tr>
+<td><code>R/mod_current.R</code></td>
+<td>The Current tab: a gauge with the latest reading of each sensor</td>
+</tr>
+<tr>
+<td><code>R/mod_timeseries.R</code></td>
+<td>The Time Series tab: a chart per sensor</td>
+</tr>
+<tr>
+<td><code>R/fct_data.R</code></td>
+<td>
+<code><a href="reference/get_data.html">get_data()</a></code>, which downloads the readings from Prometheus</td>
+</tr>
+<tr>
+<td><code>R/fct_plots.R</code></td>
+<td>
+<code><a href="reference/plot_time_series.html">plot_time_series()</a></code> and <code><a href="reference/plot_gauge.html">plot_gauge()</a></code>
+</td>
+</tr>
+<tr>
+<td><code>inst/app/www/</code></td>
+<td>The CSS, the full screen button of the charts and the favicon</td>
+</tr>
+<tr>
+<td><code>tests/testthat/</code></td>
+<td>Tests, which run offline on saved Prometheus answers</td>
+</tr>
+</tbody>
+</table>
+<p>Run the tests with <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code>, and the full package check with <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>.</p>
+<div class="section level2">
+<h2 id="deploying-to-shinyappsio">Deploying to shinyapps.io<a class="anchor" aria-label="anchor" href="#deploying-to-shinyappsio"></a>
+</h2>
+<p><code>app.R</code> starts the app with the two servers above; change them there for your own. Run <code><a href="https://rstudio.github.io/rsconnect/reference/deployApp.html" class="external-link">rsconnect::deployApp()</a></code> from the package folder, or open <code>app.R</code> in RStudio and click Publish. <code>.rscignore</code> keeps the upload to the files the app needs.</p>
 <hr>
-<p><img src="https://img.shields.io/github/stars/sedzinfo/enviro" alt="Stars"><img src="https://img.shields.io/github/watchers/sedzinfo/enviro" alt="Watchers"><img src="https://img.shields.io/github/repo-size/sedzinfo/enviro" alt="Repo Size"><img src="https://img.shields.io/github/issues/sedzinfo/enviro" alt="Open Issues"><img src="https://img.shields.io/github/forks/sedzinfo/enviro" alt="Forks"><img src="https://img.shields.io/github/last-commit/sedzinfo/enviro" alt="Last Commit"><img src="https://img.shields.io/github/contributors/sedzinfo/enviro" alt="Contributors"><img src="https://img.shields.io/github/license/sedzinfo/enviro" alt="License"><img src="https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/build-tarball.yml" alt="Workflow Status"></p>
+<p><img src="https://img.shields.io/github/stars/sedzinfo/enviro" alt="Stars"><img src="https://img.shields.io/github/watchers/sedzinfo/enviro" alt="Watchers"><img src="https://img.shields.io/github/repo-size/sedzinfo/enviro" alt="Repo Size"><img src="https://img.shields.io/github/issues/sedzinfo/enviro" alt="Open Issues"><img src="https://img.shields.io/github/forks/sedzinfo/enviro" alt="Forks"><img src="https://img.shields.io/github/last-commit/sedzinfo/enviro" alt="Last Commit"><img src="https://img.shields.io/github/contributors/sedzinfo/enviro" alt="Contributors"><img src="https://img.shields.io/github/license/sedzinfo/enviro" alt="License"><img src="https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/build-tarball.yml" alt="Workflow Status"><img src="https://github.com/sedzinfo/enviro/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></p>
+</div>
 </div>
 
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/sedzinfo/enviro/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/sedzinfo/enviro/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>GPL</li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
 

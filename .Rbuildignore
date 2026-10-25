@@ -9,3 +9,9 @@
 ^pkgdown$
 ^\.github$
 ^LICENSE$
+^screenshots$
+^\.Rd2pdf.*$
+^app\.R$
+^\.rscignore$
+^R/_disable_autoload\.R$
+^rsconnect$

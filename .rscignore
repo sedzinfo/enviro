@@ -1,0 +1,13 @@
+.github
+.Rbuildignore
+_pkgdown.yml
+docs
+enviro.pdf
+enviro_0.0.0.9000.tar.gz
+generate_package.R
+LICENSE
+man
+pkgdown
+README.md
+screenshots
+tests

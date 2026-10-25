@@ -1,0 +1,14 @@
+test_that("pimoroni() passes the servers to the app as a golem option", {
+  app <- pimoroni(prometheus_url = c("http://a", "http://b"))
+  expect_s3_class(app, "shiny.appobj")
+  expect_equal(app$appOptions$golem_options$prometheus_url, c("http://a", "http://b"))
+})
+
+test_that("the pickers of both tabs offer the servers", {
+  current <- as.character(mod_current_ui("current", c("http://a", "http://b")))
+  timeseries <- as.character(mod_timeseries_ui("timeseries", c("http://a", "http://b")))
+  for (ui in c(current, timeseries)) {
+    expect_match(ui, "<option value=\"http://a\" selected>http://a</option>", fixed = TRUE)
+    expect_match(ui, "<option value=\"http://b\">http://b</option>", fixed = TRUE)
+  }
+})

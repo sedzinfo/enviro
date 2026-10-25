@@ -2,14 +2,28 @@ Package: enviro
 Title: Displays data of pimoroni enviro from prometheus
 Version: 0.0.0.9000
 Authors@R: person("Dimitrios","Zacharatos",,"dzacharatos@yahoo.com",role=c("aut","cre"),comment=c(ORCID="0000-0003-1789-8294"))
-Description: Displays data of pimoroni enviro and pimoroni enviro + exported from prometheus
-Depends: shiny,shinydashboard,httr,jsonlite,zoo,plotly
-Imports: htmltools,stats
+Description: A Shiny application, built as a golem package, that displays the
+    readings of Pimoroni Enviro and Enviro+ sensors exported to Prometheus:
+    gauges with the latest readings, and a time series chart per sensor.
 License: GPL-3
 URL: https://sedzinfo.github.io/enviro/, https://github.com/sedzinfo/enviro
 BugReports: https://github.com/sedzinfo/enviro/issues
 Encoding: UTF-8
-LazyData: true
+Roxygen: list(markdown = TRUE)
+Imports:
+    config,
+    golem,
+    htmltools,
+    httr,
+    jsonlite,
+    plotly,
+    shiny,
+    shinydashboard,
+    stats,
+    zoo
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 Author: Dimitrios Zacharatos [aut, cre]
 Maintainer: Dimitrios Zacharatos <dzacharatos@yahoo.com>
 Config/roxygen2/version: 8.1.1

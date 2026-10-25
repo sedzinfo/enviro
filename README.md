@@ -36,9 +36,32 @@ substitute the url from your prometheus server
 pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","http://pip1.crabdance.com:1505/api/v1/query_range"))
 ```
 
+When a server cannot be reached, its gauges and charts say so instead of showing an error, and `get_data()` returns `NULL` with a message.
+
 # Screenshots
 ![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro1.png)
 ![Alt text](https://github.com/sedzinfo/enviro/raw/main/screenshots/enviro2.png)
+
+# Development
+
+The package is a [golem](https://thinkr-open.github.io/golem/) app:
+
+| File | Contents |
+|---|---|
+| `R/run_app.R` | `pimoroni()`, which starts the app |
+| `R/app_ui.R`, `R/app_server.R` | The navbar page and the server, which connect the modules |
+| `R/mod_current.R` | The Current tab: a gauge with the latest reading of each sensor |
+| `R/mod_timeseries.R` | The Time Series tab: a chart per sensor |
+| `R/fct_data.R` | `get_data()`, which downloads the readings from Prometheus |
+| `R/fct_plots.R` | `plot_time_series()` and `plot_gauge()` |
+| `inst/app/www/` | The CSS, the full screen button of the charts and the favicon |
+| `tests/testthat/` | Tests, which run offline on saved Prometheus answers |
+
+Run the tests with `devtools::test()`, and the full package check with `devtools::check()`.
+
+## Deploying to shinyapps.io
+
+`app.R` starts the app with the two servers above; change them there for your own. Run `rsconnect::deployApp()` from the package folder, or open `app.R` in RStudio and click Publish. `.rscignore` keeps the upload to the files the app needs.
 
 ---
 
@@ -51,3 +74,4 @@ pimoroni(prometheus_url=c("http://pip1.crabdance.com:1507/api/v1/query_range","h
 ![Contributors](https://img.shields.io/github/contributors/sedzinfo/enviro)
 ![License](https://img.shields.io/github/license/sedzinfo/enviro)
 ![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/build-tarball.yml)
+![R-CMD-check](https://github.com/sedzinfo/enviro/actions/workflows/R-CMD-check.yaml/badge.svg)

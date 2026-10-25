@@ -6,10 +6,16 @@ export(plot_gauge)
 export(plot_time_series)
 import(plotly)
 import(shiny)
-import(shinydashboard)
+importFrom(golem,
+  add_resource_path,
+  bundle_resources,
+  favicon,
+  with_golem_options
+)
 importFrom(httr,
   GET,
   content
 )
 importFrom(jsonlite,fromJSON)
+importFrom(shiny,shinyApp)
 importFrom(zoo,rollmean)
