@@ -1,4 +1,4 @@
-# golemenviro
+# Data Visualization for Enviro Using Prometheus
 
 Displays data of pimoroni enviro from prometheus
 
