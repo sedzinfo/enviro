@@ -5,3 +5,4 @@
 # left behind by a failed R CMD Rd2pdf, and by R CMD check
 .Rd2pdf*/
 *.Rcheck/
+rsconnect/shinyapps.io/sedzinfo/
