@@ -23,7 +23,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Application UI logic
     navbarPage(
-      "Prometheus Data Visualization",
+      "Prometheus Enviro Data Visualization",
       tabPanel("Current", mod_current_ui("current", prometheus_url)),
       tabPanel("Time Series", mod_timeseries_ui("timeseries", prometheus_url))
     )
@@ -57,7 +57,7 @@ golem_add_external_resources <- function() {
     favicon(ext = "svg"),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "enviro"
+      app_title = "Prometheus Enviro Data Visualization"
     ),
     # the Font Awesome icons of the full screen buttons of the charts
     htmltools::htmlDependencies(icon("expand"))

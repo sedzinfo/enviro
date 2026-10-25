@@ -1,5 +1,5 @@
 Package: golemenviro
-Title: Displays data of pimoroni enviro from prometheus
+Title: Real-time visualization of Pimoroni Enviro sensor data from Prometheus
 Version: 0.0.0.9000
 Authors@R: person("Dimitrios","Zacharatos",,"dzacharatos@yahoo.com",role=c("aut","cre"),
            comment=c(ORCID="0000-0003-1789-8294"))
