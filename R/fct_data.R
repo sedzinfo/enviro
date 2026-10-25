@@ -74,7 +74,6 @@ query_prometheus <- function(urlq, metric, start_time, end_time, step) {
 #' @keywords prometheus query
 #' @export
 #' @examples
-#' \dontrun{
 #' prometheus_url <- c(
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range",
 #'   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -85,7 +84,6 @@ query_prometheus <- function(urlq, metric, start_time, end_time, step) {
 #' head(filtered_df)
 #' filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[1])
 #' head(filtered_df)
-#' }
 get_data <- function(start_time = format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ"),
                      end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"),
                      urlq) {

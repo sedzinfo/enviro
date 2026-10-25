@@ -29,7 +29,6 @@ or Enviro+ from Prometheus, at about 1000 points in time between
 \code{start_time} and \code{end_time}.
 }
 \examples{
-\dontrun{
 prometheus_url <- c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -40,7 +39,6 @@ filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = pro
 head(filtered_df)
 filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[1])
 head(filtered_df)
-}
 }
 \keyword{prometheus}
 \keyword{query}

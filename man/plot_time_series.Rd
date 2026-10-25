@@ -24,7 +24,6 @@ their mean, and a summary of the last reading, mean, minimum, maximum,
 standard deviation, range and dates on the right.
 }
 \examples{
-\dontrun{
 prometheus_url <- c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -34,7 +33,6 @@ plot_time_series(data = filtered_df, variable = "Temperature")
 plot_time_series(data = filtered_df, variable = "Humidity")
 plot_time_series(data = filtered_df, variable = "Pressure")
 plot_time_series(data = filtered_df, variable = "PM2.5")
-}
 }
 \keyword{plot}
 \keyword{timeseries}

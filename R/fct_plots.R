@@ -26,7 +26,6 @@ degrees_celsius <- paste0(intToUtf8(0x00b0), "C")
 #' @keywords plot timeseries
 #' @export
 #' @examples
-#' \dontrun{
 #' prometheus_url <- c(
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range",
 #'   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -36,7 +35,6 @@ degrees_celsius <- paste0(intToUtf8(0x00b0), "C")
 #' plot_time_series(data = filtered_df, variable = "Humidity")
 #' plot_time_series(data = filtered_df, variable = "Pressure")
 #' plot_time_series(data = filtered_df, variable = "PM2.5")
-#' }
 plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30) {
   smoothed <- zoo::rollmean(as.numeric(data[, variable]), k = k, align = "center", fill = NA)
   current_value <- round(as.numeric(data[nrow(data), variable]), 2)
@@ -94,8 +92,10 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
     ) %>%
     layout(
       autosize = TRUE,
-      margin = list(l = 80, r = 80, b = 80, t = 50, pad = 50),
-      legend = list(orientation = "v", xanchor = "left"),
+      # room on the right for the summary
+      margin = list(l = 80, r = 140, b = 80, t = 50, pad = 50),
+      # at the bottom of the chart, below the dates, as on the right it runs into the summary in narrow charts
+      legend = list(orientation = "h", x = 0, xanchor = "left", yref = "container", y = 0, yanchor = "bottom"),
       title = variable,
       xaxis = list(title = ""),
       yaxis = list(title = scale),
@@ -117,7 +117,6 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
 #' @keywords plot gauge
 #' @export
 #' @examples
-#' \dontrun{
 #' prometheus_url <- c(
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range",
 #'   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -126,7 +125,6 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
 #' plot_gauge(data = filtered_df, variable = "Temperature")
 #' plot_gauge(data = filtered_df, variable = "Humidity")
 #' plot_gauge(data = filtered_df, variable = "PM2.5")
-#' }
 plot_gauge <- function(data, variable = "Temperature") {
   help_pm1 <- "Ultra fine particles"
   help_pm25 <- "Combustion particles,Organic compounds,Metals"

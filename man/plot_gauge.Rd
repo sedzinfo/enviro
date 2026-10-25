@@ -20,7 +20,6 @@ ideal range in green and a short note on what the gas and particle
 sensors measure.
 }
 \examples{
-\dontrun{
 prometheus_url <- c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
@@ -29,7 +28,6 @@ filtered_df <- get_data(urlq = prometheus_url[1])
 plot_gauge(data = filtered_df, variable = "Temperature")
 plot_gauge(data = filtered_df, variable = "Humidity")
 plot_gauge(data = filtered_df, variable = "PM2.5")
-}
 }
 \keyword{gauge}
 \keyword{plot}
