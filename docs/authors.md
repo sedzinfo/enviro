@@ -10,11 +10,11 @@
 Source:
 [`DESCRIPTION`](https://github.com/sedzinfo/golemenviro/blob/HEAD/DESCRIPTION)
 
-Zacharatos D (2026). *golemenviro: Displays data of pimoroni enviro from
-prometheus*. R package version 0.0.0.9000,
+Zacharatos D (2026). *golemenviro: Real-time visualization of Pimoroni
+Enviro sensor data from Prometheus*. R package version 0.0.0.9000,
 <https://sedzinfo.github.io/golemenviro/>.
 
-@Manual{, title = {golemenviro: Displays data of pimoroni enviro from
-prometheus}, author = {Dimitrios Zacharatos}, year = {2026}, note = {R
-package version 0.0.0.9000}, url =
+@Manual{, title = {golemenviro: Real-time visualization of Pimoroni
+Enviro sensor data from Prometheus}, author = {Dimitrios Zacharatos},
+year = {2026}, note = {R package version 0.0.0.9000}, url =
 {https://sedzinfo.github.io/golemenviro/}, }

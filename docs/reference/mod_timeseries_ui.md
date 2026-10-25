@@ -28,7 +28,7 @@ A `tagList` of Shiny UI elements.
 ``` r
 if (FALSE) { # \dontrun{
 shiny::fluidPage(
-  enviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
+  golemenviro:::mod_timeseries_ui("timeseries", "http://pip1.crabdance.com:1507/api/v1/query_range")
 )
 } # }
 ```

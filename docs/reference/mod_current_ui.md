@@ -28,7 +28,7 @@ A `tagList` of Shiny UI elements.
 ``` r
 if (FALSE) { # \dontrun{
 shiny::fluidPage(
-  enviro:::mod_current_ui("current", "http://pip1.crabdance.com:1507/api/v1/query_range")
+  golemenviro:::mod_current_ui("current", "http://pip1.crabdance.com:1507/api/v1/query_range")
 )
 } # }
 ```
