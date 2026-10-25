@@ -1,4 +1,4 @@
-url: https://sedzinfo.github.io/enviro/
+url: https://sedzinfo.github.io/golemenviro/
 
 template:
   bootstrap: 5
@@ -25,7 +25,7 @@ navbar:
       aria-label: sedzinfo home page
     github:
       icon: fab fa-github
-      href: https://github.com/sedzinfo/enviro
+      href: https://github.com/sedzinfo/golemenviro
       aria-label: GitHub
 
 footer:

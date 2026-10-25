@@ -8,13 +8,13 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sedzinfo/enviro/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/sedzinfo/golemenviro/blob/HEAD/DESCRIPTION)
 
-Zacharatos D (2026). *enviro: Displays data of pimoroni enviro from
+Zacharatos D (2026). *golemenviro: Displays data of pimoroni enviro from
 prometheus*. R package version 0.0.0.9000,
-<https://sedzinfo.github.io/enviro/>.
+<https://sedzinfo.github.io/golemenviro/>.
 
-@Manual{, title = {enviro: Displays data of pimoroni enviro from
+@Manual{, title = {golemenviro: Displays data of pimoroni enviro from
 prometheus}, author = {Dimitrios Zacharatos}, year = {2026}, note = {R
-package version 0.0.0.9000}, url = {https://sedzinfo.github.io/enviro/},
-}
+package version 0.0.0.9000}, url =
+{https://sedzinfo.github.io/golemenviro/}, }

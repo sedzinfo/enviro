@@ -45,7 +45,7 @@ substitute the url from your prometheus server
 
 When a server cannot be reached, its gauges and charts say so instead of
 showing an error, and
-[`get_data()`](https://sedzinfo.github.io/enviro/reference/get_data.md)
+[`get_data()`](https://sedzinfo.github.io/golemenviro/reference/get_data.md)
 returns `NULL` with a message.
 
 # Screenshots
@@ -60,12 +60,12 @@ The package is a [golem](https://thinkr-open.github.io/golem/) app:
 
 | File | Contents |
 |----|----|
-| `R/run_app.R` | [`pimoroni()`](https://sedzinfo.github.io/enviro/reference/pimoroni.md), which starts the app |
+| `R/run_app.R` | [`pimoroni()`](https://sedzinfo.github.io/golemenviro/reference/pimoroni.md), which starts the app |
 | `R/app_ui.R`, `R/app_server.R` | The navbar page and the server, which connect the modules |
 | `R/mod_current.R` | The Current tab: a gauge with the latest reading of each sensor |
 | `R/mod_timeseries.R` | The Time Series tab: a chart per sensor |
-| `R/fct_data.R` | [`get_data()`](https://sedzinfo.github.io/enviro/reference/get_data.md), which downloads the readings from Prometheus |
-| `R/fct_plots.R` | [`plot_time_series()`](https://sedzinfo.github.io/enviro/reference/plot_time_series.md) and [`plot_gauge()`](https://sedzinfo.github.io/enviro/reference/plot_gauge.md) |
+| `R/fct_data.R` | [`get_data()`](https://sedzinfo.github.io/golemenviro/reference/get_data.md), which downloads the readings from Prometheus |
+| `R/fct_plots.R` | [`plot_time_series()`](https://sedzinfo.github.io/golemenviro/reference/plot_time_series.md) and [`plot_gauge()`](https://sedzinfo.github.io/golemenviro/reference/plot_gauge.md) |
 | `inst/app/www/` | The CSS, the full screen button of the charts and the favicon |
 | `tests/testthat/` | Tests, which run offline on saved Prometheus answers |
 
@@ -94,12 +94,12 @@ Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/enviro/bu
 
 ## All functions
 
-- [`get_data()`](https://sedzinfo.github.io/enviro/reference/get_data.md)
+- [`get_data()`](https://sedzinfo.github.io/golemenviro/reference/get_data.md)
   : Get Data from Prometheus
-- [`pimoroni()`](https://sedzinfo.github.io/enviro/reference/pimoroni.md)
+- [`pimoroni()`](https://sedzinfo.github.io/golemenviro/reference/pimoroni.md)
   : Run the Pimoroni Enviro app
-- [`plot_gauge()`](https://sedzinfo.github.io/enviro/reference/plot_gauge.md)
+- [`plot_gauge()`](https://sedzinfo.github.io/golemenviro/reference/plot_gauge.md)
   : Plot Gauge
-- [`plot_time_series()`](https://sedzinfo.github.io/enviro/reference/plot_time_series.md)
+- [`plot_time_series()`](https://sedzinfo.github.io/golemenviro/reference/plot_time_series.md)
   : Plot Time Series
 

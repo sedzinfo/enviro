@@ -16,7 +16,7 @@ mod_current_server(id)
 - id:
 
   Character. Module namespace id, must match the id used in
-  [`mod_current_ui()`](https://sedzinfo.github.io/enviro/reference/mod_current_ui.md).
+  [`mod_current_ui()`](https://sedzinfo.github.io/golemenviro/reference/mod_current_ui.md).
 
 ## Value
 

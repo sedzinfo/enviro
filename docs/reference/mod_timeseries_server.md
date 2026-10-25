@@ -16,7 +16,7 @@ mod_timeseries_server(id)
 - id:
 
   Character. Module namespace id, must match the id used in
-  [`mod_timeseries_ui()`](https://sedzinfo.github.io/enviro/reference/mod_timeseries_ui.md).
+  [`mod_timeseries_ui()`](https://sedzinfo.github.io/golemenviro/reference/mod_timeseries_ui.md).
 
 ## Value
 

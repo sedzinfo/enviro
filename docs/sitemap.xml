@@ -1,17 +1,17 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>https://sedzinfo.github.io/enviro/404.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/authors.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/index.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/LICENSE-text.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/get_data.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/index.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/mod_current_server.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/mod_current_ui.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/mod_timeseries_server.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/mod_timeseries_ui.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/pimoroni.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/plot_gauge.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/plot_time_series.html</loc></url>
-<url><loc>https://sedzinfo.github.io/enviro/reference/query_prometheus.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/404.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/authors.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/index.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/LICENSE-text.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/get_data.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/index.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/mod_current_server.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/mod_current_ui.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/mod_timeseries_server.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/mod_timeseries_ui.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/pimoroni.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/plot_gauge.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/plot_time_series.html</loc></url>
+<url><loc>https://sedzinfo.github.io/golemenviro/reference/query_prometheus.html</loc></url>
 </urlset>
 
