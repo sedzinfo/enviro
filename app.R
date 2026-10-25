@@ -14,7 +14,7 @@ Sys.unsetenv("RSTUDIO")
 
 pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
 options("golem.app.prod" = TRUE)
-golemenviro::pimoroni(prometheus_url = c(
+pimoroni(prometheus_url = c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
 )) # add parameters here (if any)
