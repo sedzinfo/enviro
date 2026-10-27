@@ -18,3 +18,6 @@ pimoroni(prometheus_url = c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
 )) # add parameters here (if any)
+
+
+# rsconnect::writeManifest(appDir = ".", appPrimaryDoc = "app.R")
