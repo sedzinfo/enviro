@@ -1,9 +1,11 @@
 # Current module - server
 
-Downloads the readings of the last 7 days when the server changes, and
-renders a gauge with the latest reading of each sensor. The gauges of
-the sensors the device does not have stay empty, and when the server
-cannot be reached the gauges say so.
+Downloads the readings of the last 7 days when the server changes and
+every 5 minutes, and renders a gauge with the latest reading of each
+sensor. The gauges of the sensors the device does not have stay empty,
+and when the server cannot be reached the gauges say so. The time of the
+last reading turns red when it is more than 30 minutes old, as the
+device may then be offline.
 
 ## Usage
 

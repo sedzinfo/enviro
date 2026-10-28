@@ -2842,10 +2842,10 @@
       "checksum": "d70745cc1e51281b3e849cc90734326a"
     },
     "inst/app/www/custom.css": {
-      "checksum": "4c3f5bce70fc6fd8db5b15db89801f0a"
+      "checksum": "a7b036e9e1635c87e016f0b7a705fa96"
     },
     "inst/app/www/dark_mode.css": {
-      "checksum": "a79b8ed81c08e1447b27cd3ebfef94aa"
+      "checksum": "deecc55ad404c75f44c31da52ed26c2f"
     },
     "inst/app/www/dark_mode.js": {
       "checksum": "e16e3896176e9800d9a7ec9a699ea874"
@@ -2875,16 +2875,16 @@
       "checksum": "d53cfe22c13a9f0c388c44affe151f6d"
     },
     "R/fct_data.R": {
-      "checksum": "0fda874e89309155037e0dcced239a2f"
+      "checksum": "11e4175d56e5125e8c6fb329a9b04dfe"
     },
     "R/fct_plots.R": {
-      "checksum": "8368a71e4e6bb1702c0c738be5e24413"
+      "checksum": "61736671261329e13c31925506d7de20"
     },
     "R/mod_current.R": {
-      "checksum": "2cfd5871aa840230dd07834528bc6fb6"
+      "checksum": "b1d1c0ece1e2ebb53f063463a61873d6"
     },
     "R/mod_timeseries.R": {
-      "checksum": "16fcd35a9886332db1d31f6aaeacf0d1"
+      "checksum": "2acfb97b3ef77677a6e6a16257b2b084"
     },
     "R/run_app.R": {
       "checksum": "2d07992a80432b1e37c5388db7fe11a2"

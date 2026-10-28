@@ -5,7 +5,7 @@ Query one metric from Prometheus
 ## Usage
 
 ``` r
-query_prometheus(urlq, metric, start_time, end_time, step)
+query_prometheus(urlq, metric, start_time, end_time, step, average = FALSE)
 ```
 
 ## Arguments
@@ -26,6 +26,11 @@ query_prometheus(urlq, metric, start_time, end_time, step)
 
   Time between two readings, such as "10m".
 
+- average:
+
+  `TRUE` for the average of the readings over each step, instead of the
+  single reading at each point in time.
+
 ## Value
 
 The `values` of the result: one matrix of times and values per series of
@@ -39,7 +44,9 @@ an error.
 if (FALSE) { # \dontrun{
 golemenviro:::query_prometheus(
   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
-  format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), "1m"
+  format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+  format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+  "1m"
 )
 } # }
 ```

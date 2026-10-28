@@ -1,6 +1,6 @@
 # Current module - UI
 
-A server picker, the time the data was downloaded, and a gauge with the
+A server picker, the time of the last reading, and a gauge with the
 latest reading of each sensor.
 
 ## Usage
