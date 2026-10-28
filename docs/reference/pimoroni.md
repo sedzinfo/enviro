@@ -2,7 +2,8 @@
 
 Starts a Shiny app with the readings of Pimoroni Enviro and Enviro+
 sensors exported to Prometheus: gauges with the latest readings in the
-Current tab, and a chart per sensor in the Time Series tab.
+Current tab, and a chart per sensor in the Time Series tab. The app has
+a dark mode, switched by the button at the right of the navbar.
 
 ## Usage
 

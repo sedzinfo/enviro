@@ -4,7 +4,7 @@
 \alias{query_prometheus}
 \title{Query one metric from Prometheus}
 \usage{
-query_prometheus(urlq, metric, start_time, end_time, step)
+query_prometheus(urlq, metric, start_time, end_time, step, average = FALSE)
 }
 \arguments{
 \item{urlq}{Prometheus query_range url.}
@@ -15,6 +15,9 @@ query_prometheus(urlq, metric, start_time, end_time, step)
 "2025-01-31T11:48:08Z".}
 
 \item{step}{Time between two readings, such as "10m".}
+
+\item{average}{\code{TRUE} for the average of the readings over each step,
+instead of the single reading at each point in time.}
 }
 \value{
 The \code{values} of the result: one matrix of times and values per
@@ -29,7 +32,9 @@ Query one metric from Prometheus
 \dontrun{
 golemenviro:::query_prometheus(
   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
-  format(Sys.time() - 3600, "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"), format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"), "1m"
+  format(Sys.time() - 3600, "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"),
+  format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"),
+  "1m"
 )
 }
 }

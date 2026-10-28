@@ -6,13 +6,26 @@ test_that("get_data() combines the sensors, joins a split series and drops the c
 
 test_that("get_data() asks for about 1000 readings, also in a window shorter than a day", {
   steps <- character()
-  local_mocked_bindings(query_prometheus = function(urlq, metric, start_time, end_time, step) {
+  local_mocked_bindings(query_prometheus = function(urlq, metric, start_time, end_time, step, ...) {
     steps <<- c(steps, step)
     answers[[metric]]
   })
   get_data("2023-11-14T00:00:00Z", "2023-11-14T06:00:00Z", urlq = "http://x")
   get_data("2023-11-07T00:00:00Z", "2023-11-14T00:00:00Z", urlq = "http://x")
   expect_equal(unique(steps), c("22s", "605s"))
+})
+
+test_that("get_data() averages the readings over each step from steps of an hour", {
+  averaged <- logical()
+  local_mocked_bindings(query_prometheus = function(urlq, metric, start_time, end_time, step, average = FALSE) {
+    averaged <<- c(averaged, average)
+    answers[[metric]]
+  })
+  get_data("2023-08-14T00:00:00Z", "2023-11-14T00:00:00Z", urlq = "http://x") # 92 days, 2.2 hours apart
+  expect_true(all(averaged))
+  averaged <- logical()
+  get_data("2023-10-14T00:00:00Z", "2023-11-14T00:00:00Z", urlq = "http://x") # 31 days, 45 minutes apart
+  expect_false(any(averaged))
 })
 
 test_that("get_data() averages series of the same metric at the same time", {

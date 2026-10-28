@@ -27,6 +27,8 @@ metric_names <- c(
 #' @param start_time,end_time Start and end time, in UTC, in this format:
 #'   "2025-01-31T11:48:08Z".
 #' @param step Time between two readings, such as "10m".
+#' @param average `TRUE` for the average of the readings over each step,
+#'   instead of the single reading at each point in time.
 #'
 #' @return The `values` of the result: one matrix of times and values per
 #'   series of the metric, or `NULL` when the answer cannot be read. An error
@@ -39,13 +41,16 @@ metric_names <- c(
 #' \dontrun{
 #' golemenviro:::query_prometheus(
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
-#'   format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), "1m"
+#'   format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+#'   format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+#'   "1m"
 #' )
 #' }
-query_prometheus <- function(urlq, metric, start_time, end_time, step) {
+query_prometheus <- function(urlq, metric, start_time, end_time, step, average = FALSE) {
+  query <- if (average) paste0("avg_over_time(", metric, "[", step, "])") else metric
   response <- httr::GET(
     urlq,
-    query = list(query = metric, start = start_time, end = end_time, step = step),
+    query = list(query = query, start = start_time, end = end_time, step = step),
     httr::timeout(15)
   )
   httr::stop_for_status(response)
@@ -61,7 +66,10 @@ query_prometheus <- function(urlq, metric, start_time, end_time, step) {
 #' @title Get Data from Prometheus
 #' @description Downloads the readings of all the sensors of a Pimoroni Enviro
 #'   or Enviro+ from Prometheus, at about 1000 points in time between
-#'   `start_time` and `end_time`.
+#'   `start_time` and `end_time`. When these are an hour or more apart (a
+#'   window of about 6 weeks or more), each point is the average of the
+#'   readings since the previous one, so that the day and night cycle does not
+#'   show up as noise; otherwise it is the reading at that time.
 #' @param start_time start time, in UTC, in this format: "2025-01-31T11:48:08Z"
 #' @param end_time end time, in UTC, in this format: "2025-02-07T11:48:33Z"
 #' @param urlq Prometheus url
@@ -90,10 +98,14 @@ get_data <- function(start_time = format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%
   # 1000 points in time, in whole seconds: with the time of day, as a window can be shorter than a day
   window <- difftime(as.POSIXct(end_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
                      as.POSIXct(start_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), units = "secs")
-  time_step <- paste0(max(1, round(as.numeric(window) / 999)), "s")
+  step_seconds <- max(1, round(as.numeric(window) / 999))
+  time_step <- paste0(step_seconds, "s")
   xtsdf <- list()
   for (qm in metrics) {
-    values <- tryCatch(query_prometheus(urlq, qm, start_time, end_time, time_step), error = function(e) e)
+    values <- tryCatch(
+      query_prometheus(urlq, qm, start_time, end_time, time_step, average = step_seconds >= 3600),
+      error = function(e) e
+    )
     # a server that is offline fails on the first metric: stop there instead of waiting for each one
     if (inherits(values, "error")) {
       message("Could not get data from ", urlq, ": ", conditionMessage(values))

@@ -16,7 +16,7 @@ answers <- list(
 )
 
 answer_from <- function(answers) {
-  function(urlq, metric, start_time, end_time, step) answers[[metric]]
+  function(urlq, metric, start_time, end_time, step, ...) answers[[metric]]
 }
 
 # what get_data() makes of these answers

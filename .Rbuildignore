@@ -15,3 +15,4 @@
 ^\.rscignore$
 ^R/_disable_autoload\.R$
 ^rsconnect$
+^manifest\.json$

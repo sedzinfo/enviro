@@ -27,7 +27,10 @@ out, as the device does not have them.
 \description{
 Downloads the readings of all the sensors of a Pimoroni Enviro
 or Enviro+ from Prometheus, at about 1000 points in time between
-\code{start_time} and \code{end_time}.
+\code{start_time} and \code{end_time}. When these are an hour or more apart (a
+window of about 6 weeks or more), each point is the average of the
+readings since the previous one, so that the day and night cycle does not
+show up as noise; otherwise it is the reading at that time.
 }
 \examples{
 prometheus_url <- c(

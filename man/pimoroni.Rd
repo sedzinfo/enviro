@@ -43,7 +43,8 @@ at the console, opens the app in the browser.
 \description{
 Starts a Shiny app with the readings of Pimoroni Enviro and Enviro+ sensors
 exported to Prometheus: gauges with the latest readings in the Current tab,
-and a chart per sensor in the Time Series tab.
+and a chart per sensor in the Time Series tab. The app has a dark mode,
+switched by the button at the right of the navbar.
 }
 \examples{
 if (interactive()) {

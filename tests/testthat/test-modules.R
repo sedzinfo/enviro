@@ -34,6 +34,41 @@ test_that("the current tab gives the gauges all the readings, not only the last"
   })
 })
 
+test_that("the current tab shows when the last reading was taken, in red when it is old", {
+  # the saved readings are from 2023
+  local_mocked_bindings(get_data = function(...) readings)
+  testServer(mod_current_server, {
+    session$setInputs(server_gauge = "http://x")
+    expect_match(output$last_date$html, "reading-old", fixed = TRUE)
+    expect_match(output$last_date$html, "Last reading: 2023-11-1\\d .* days ago")
+  })
+  # the same readings, as if the last one had come 5 minutes ago
+  local_mocked_bindings(get_data = function(...) transform(readings, Date = Sys.time() - 60 * c(45, 35, 25, 15, 5)))
+  testServer(mod_current_server, {
+    session$setInputs(server_gauge = "http://x")
+    expect_match(output$last_date$html, "Last reading:", fixed = TRUE)
+    expect_no_match(output$last_date$html, "reading-old", fixed = TRUE)
+  })
+})
+
+test_that("the current tab downloads the readings again every 5 minutes", {
+  downloads <- 0
+  local_mocked_bindings(get_data = function(...) {
+    downloads <<- downloads + 1
+    readings
+  })
+  testServer(mod_current_server, {
+    session$setInputs(server_gauge = "http://x")
+    last_reading()
+    session$elapse(4 * 60 * 1000)
+    last_reading()
+    expect_equal(downloads, 1)
+    session$elapse(60 * 1000)
+    last_reading()
+    expect_equal(downloads, 2)
+  })
+})
+
 test_that("both tabs say when the server cannot be reached", {
   local_mocked_bindings(get_data = function(...) NULL)
   testServer(mod_timeseries_server, {

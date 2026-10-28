@@ -1,7 +1,13 @@
-.custom-label {
-  display: inline-block;
-  width: 150px;
-  vertical-align: top;
+/* the time of the last reading in the Current tab, when it is old */
+.reading-old {
+  color: #c9302c;
+  font-weight: bold;
+}
+
+/* the gray panel of each gauge and chart (dark_mode.css has the dark one) */
+.sensor-box {
+  background-color: #F8F8F8;
+  padding-top: 20px;
 }
 
 /* the full screen button of the time series charts, see plot_zoom.js */

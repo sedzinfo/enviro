@@ -5,7 +5,8 @@
 #'
 #' Starts a Shiny app with the readings of Pimoroni Enviro and Enviro+ sensors
 #' exported to Prometheus: gauges with the latest readings in the Current tab,
-#' and a chart per sensor in the Time Series tab.
+#' and a chart per sensor in the Time Series tab. The app has a dark mode,
+#' switched by the button at the right of the navbar.
 #'
 #' @param prometheus_url Character vector of Prometheus query_range urls, one
 #'   per device, such as "http://pip1.crabdance.com:1507/api/v1/query_range".

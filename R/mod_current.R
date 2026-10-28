@@ -3,8 +3,8 @@
 ##########################################################################################
 #' Current module - UI
 #'
-#' A server picker, the time the data was downloaded, and a gauge with the
-#' latest reading of each sensor.
+#' A server picker, the time of the last reading, and a gauge with the latest
+#' reading of each sensor.
 #'
 #' @param id Character. Module namespace id.
 #' @param prometheus_url Character vector of Prometheus urls to choose from.
@@ -22,12 +22,12 @@
 mod_current_ui <- function(id, prometheus_url) {
   ns <- NS(id)
   gauge <- function(output) {
-    shinydashboard::box(width = 4, style = "background-color: #F8F8F8; padding-top: 20px;", output)
+    shinydashboard::box(width = 4, class = "sensor-box", output)
   }
   tagList(
     fluidRow(
       column(width = 8, selectInput(ns("server_gauge"), label = "Server", choices = c(prometheus_url), selected = prometheus_url[1], width = "600px")),
-      column(width = 4, textOutput(ns("last_date")))
+      column(width = 4, uiOutput(ns("last_date")))
     ),
     fluidRow(
       gauge(plotly::plotlyOutput(ns("gauge_temperature"))),
@@ -49,10 +49,12 @@ mod_current_ui <- function(id, prometheus_url) {
 ##########################################################################################
 #' Current module - server
 #'
-#' Downloads the readings of the last 7 days when the server changes, and
-#' renders a gauge with the latest reading of each sensor. The gauges of the
-#' sensors the device does not have stay empty, and when the server cannot be
-#' reached the gauges say so.
+#' Downloads the readings of the last 7 days when the server changes and every
+#' 5 minutes, and renders a gauge with the latest reading of each sensor. The
+#' gauges of the sensors the device does not have stay empty, and when the
+#' server cannot be reached the gauges say so. The time of the last reading
+#' turns red when it is more than 30 minutes old, as the device may then be
+#' offline.
 #'
 #' @param id Character. Module namespace id, must match the id used in
 #'   [mod_current_ui()].
@@ -71,6 +73,8 @@ mod_current_ui <- function(id, prometheus_url) {
 mod_current_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     gauge_data <- reactive({
+      # again every 5 minutes, so that the gauges follow the readings while the page is open
+      invalidateLater(5 * 60 * 1000)
       start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
       get_data(start_time = start_time, end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), urlq = input$server_gauge)
     })
@@ -87,9 +91,21 @@ mod_current_server <- function(id) {
         plot_gauge(variable = variable, data = gauge_data()) %>% plotly::as_widget()
       })
     }
-    output$last_date <- renderText({
-      gauge_data()
-      format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+    # in the time zone of the app; the 7 days come at points about 10 minutes apart, so the last
+    # one can be up to 10 minutes old while the device works, and it is red only after 30
+    output$last_date <- renderUI({
+      taken <- max(last_reading()$Date)
+      minutes <- as.numeric(difftime(Sys.time(), taken, units = "mins"))
+      text <- paste("Last reading:", format(taken, "%Y-%m-%d %H:%M %Z"))
+      if (minutes <= 30) return(span(text))
+      age <- if (minutes < 120) {
+        paste(round(minutes), "minutes")
+      } else if (minutes < 48 * 60) {
+        paste(round(minutes / 60), "hours")
+      } else {
+        paste(round(minutes / (24 * 60)), "days")
+      }
+      span(class = "reading-old", paste0(text, " (", age, " ago)"))
     })
     output$gauge_temperature <- gauge_output("Temperature")
     output$gauge_humidity <- gauge_output("Humidity")

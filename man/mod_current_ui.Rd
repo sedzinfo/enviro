@@ -15,8 +15,8 @@ mod_current_ui(id, prometheus_url)
 A \code{tagList} of Shiny UI elements.
 }
 \description{
-A server picker, the time the data was downloaded, and a gauge with the
-latest reading of each sensor.
+A server picker, the time of the last reading, and a gauge with the latest
+reading of each sensor.
 }
 \examples{
 \dontrun{

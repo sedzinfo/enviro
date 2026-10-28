@@ -41,9 +41,10 @@ app_ui <- function(request, analytics = FALSE) {
 #'
 #' Internally used to add the favicon, the Font Awesome icons of the full
 #' screen buttons, and the CSS and JavaScript files of `inst/app/www` inside
-#' the Shiny application: those of the charts (`custom.css`, `plot_zoom.js`)
-#' and of the analytics (`analytics.css`, `analytics.js`). A file put in that
-#' folder is added without any change here.
+#' the Shiny application: those of the charts (`custom.css`, `plot_zoom.js`),
+#' of the analytics (`analytics.css`, `analytics.js`) and of the dark mode
+#' (`dark_mode.css`, `dark_mode.js`). A file put in that folder is added
+#' without any change here.
 #'
 #' @import shiny
 #' @importFrom golem add_resource_path favicon bundle_resources

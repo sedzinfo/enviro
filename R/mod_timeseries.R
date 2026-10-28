@@ -22,7 +22,7 @@
 mod_timeseries_ui <- function(id, prometheus_url) {
   ns <- NS(id)
   chart <- function(width, output) {
-    column(width = width, style = "background-color: #F8F8F8; padding-top: 20px;", output)
+    column(width = width, class = "sensor-box", output)
   }
   # the periods to choose from, in days
   periods <- c(
