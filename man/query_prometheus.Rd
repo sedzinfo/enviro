@@ -11,7 +11,7 @@ query_prometheus(urlq, metric, start_time, end_time, step)
 
 \item{metric}{Name of the metric, one of \code{metrics}.}
 
-\item{start_time, end_time}{Start and end time, in this format:
+\item{start_time, end_time}{Start and end time, in UTC, in this format:
 "2025-01-31T11:48:08Z".}
 
 \item{step}{Time between two readings, such as "10m".}
@@ -29,7 +29,7 @@ Query one metric from Prometheus
 \dontrun{
 golemenviro:::query_prometheus(
   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
-  format(Sys.time() - 3600, "\%Y-\%m-\%dT\%H:\%M:\%SZ"), format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ"), "1m"
+  format(Sys.time() - 3600, "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"), format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"), "1m"
 )
 }
 }

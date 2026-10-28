@@ -15,7 +15,7 @@ mod_timeseries_ui(id, prometheus_url)
 A \code{tagList} of Shiny UI elements.
 }
 \description{
-A server picker, the number of days to show, and a chart for each sensor,
+A server picker, the period to show (6 hours to 1 year), and a chart for each sensor,
 with a full screen button (see \code{inst/app/www/plot_zoom.js}).
 }
 \examples{

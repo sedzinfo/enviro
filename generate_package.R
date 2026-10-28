@@ -15,9 +15,9 @@ cat("\014")
 directory <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(directory)
 # usethis::create_package("golemenviro")
-document()
 if ("golemenviro" %in% loadedNamespaces()) unloadNamespace("golemenviro") # an old version still loaded would make the reinstalled one look corrupt
 if ("golemenviro" %in% rownames(installed.packages())) remove.packages("golemenviro")
+document()
 install()
 library(golemenviro)
 

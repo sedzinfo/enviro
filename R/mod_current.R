@@ -71,8 +71,8 @@ mod_current_ui <- function(id, prometheus_url) {
 mod_current_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     gauge_data <- reactive({
-      start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ")
-      get_data(start_time = start_time, end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"), urlq = input$server_gauge)
+      start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+      get_data(start_time = start_time, end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), urlq = input$server_gauge)
     })
     # the rows of the last reading
     last_reading <- reactive({
@@ -82,14 +82,14 @@ mod_current_server <- function(id) {
     })
     gauge_output <- function(variable, render = plotly::renderPlotly) {
       render({
-        df_last <- last_reading()
-        req(variable %in% names(df_last))
-        plot_gauge(variable = variable, data = df_last) %>% plotly::as_widget()
+        req(variable %in% names(last_reading()))
+        # all 7 days, as the gauges of the gas sensors are scaled to them
+        plot_gauge(variable = variable, data = gauge_data()) %>% plotly::as_widget()
       })
     }
     output$last_date <- renderText({
       gauge_data()
-      format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ")
+      format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
     })
     output$gauge_temperature <- gauge_output("Temperature")
     output$gauge_humidity <- gauge_output("Humidity")

@@ -7,6 +7,7 @@
 pimoroni(
   prometheus_url,
   timezone = "Europe/Bucharest",
+  analytics = FALSE,
   onStart = NULL,
   options = list(),
   enableBookmarking = NULL,
@@ -19,6 +20,11 @@ pimoroni(
 per device, such as "http://pip1.crabdance.com:1507/api/v1/query_range".}
 
 \item{timezone}{The time zone the readings are shown in, while the app runs.}
+
+\item{analytics}{\code{TRUE} to add Google Analytics, through the cookie banner
+shared with the sites of sedzinfo.github.io, which loads it only after the
+visitor accepts. Meant for the public deployment (see \code{app.R}); off by
+default, so that running the app yourself sends nothing.}
 
 \item{onStart}{See \code{\link[shiny:shinyApp]{shiny::shinyApp()}}.}
 

@@ -24,7 +24,7 @@ metric_names <- c(
 #'
 #' @param urlq Prometheus query_range url.
 #' @param metric Name of the metric, one of `metrics`.
-#' @param start_time,end_time Start and end time, in this format:
+#' @param start_time,end_time Start and end time, in UTC, in this format:
 #'   "2025-01-31T11:48:08Z".
 #' @param step Time between two readings, such as "10m".
 #'
@@ -39,7 +39,7 @@ metric_names <- c(
 #' \dontrun{
 #' golemenviro:::query_prometheus(
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range", "temperature",
-#'   format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ"), format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"), "1m"
+#'   format(Sys.time() - 3600, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), "1m"
 #' )
 #' }
 query_prometheus <- function(urlq, metric, start_time, end_time, step) {
@@ -62,8 +62,8 @@ query_prometheus <- function(urlq, metric, start_time, end_time, step) {
 #' @description Downloads the readings of all the sensors of a Pimoroni Enviro
 #'   or Enviro+ from Prometheus, at about 1000 points in time between
 #'   `start_time` and `end_time`.
-#' @param start_time start time in this format: "2025-01-31T11:48:08Z"
-#' @param end_time end time in this format: "2025-02-07T11:48:33Z"
+#' @param start_time start time, in UTC, in this format: "2025-01-31T11:48:08Z"
+#' @param end_time end time, in UTC, in this format: "2025-02-07T11:48:33Z"
 #' @param urlq Prometheus url
 #' @return A data frame with the Date and the Timestamp of the readings and one
 #'   column per sensor, or `NULL`, with a message, when the server cannot be
@@ -78,16 +78,19 @@ query_prometheus <- function(urlq, metric, start_time, end_time, step) {
 #'   "http://pip1.crabdance.com:1507/api/v1/query_range",
 #'   "http://pip1.crabdance.com:1505/api/v1/query_range"
 #' )
-#' start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ")
-#' end_time <- format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ")
+#' start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+#' end_time <- format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
 #' filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[2])
 #' head(filtered_df)
 #' filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[1])
 #' head(filtered_df)
-get_data <- function(start_time = format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ"),
-                     end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"),
+get_data <- function(start_time = format(Sys.time() - 60 * 60 * 24 * 7, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+                     end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
                      urlq) {
-  time_step <- paste0(as.numeric(round(diff(seq(as.POSIXct(start_time), as.POSIXct(end_time), length.out = 1000)), 0), units = "mins"), "m")[1]
+  # 1000 points in time, in whole seconds: with the time of day, as a window can be shorter than a day
+  window <- difftime(as.POSIXct(end_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+                     as.POSIXct(start_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), units = "secs")
+  time_step <- paste0(max(1, round(as.numeric(window) / 999)), "s")
   xtsdf <- list()
   for (qm in metrics) {
     values <- tryCatch(query_prometheus(urlq, qm, start_time, end_time, time_step), error = function(e) e)

@@ -1,7 +1,8 @@
 # Time Series module - UI
 
-A server picker, the number of days to show, and a chart for each
-sensor, with a full screen button (see `inst/app/www/plot_zoom.js`).
+A server picker, the period to show (6 hours to 1 year), and a chart for
+each sensor, with a full screen button (see
+`inst/app/www/plot_zoom.js`).
 
 ## Usage
 

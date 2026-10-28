@@ -8,6 +8,9 @@
 #' `prometheus_url` given to [pimoroni()].
 #'
 #' @param request Internal parameter for `{shiny}`. DO NOT REMOVE.
+#' @param analytics `TRUE` to add Google Analytics, with its cookie banner
+#'   (see `analytics_resources()`) and a footer with the links of the banner
+#'   (see `analytics_footer()`).
 #'
 #' @import shiny
 #' @noRd
@@ -16,14 +19,16 @@
 #' \dontrun{
 #' shiny::shinyApp(ui = app_ui, server = app_server)
 #' }
-app_ui <- function(request) {
+app_ui <- function(request, analytics = FALSE) {
   prometheus_url <- golem::get_golem_options("prometheus_url")
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    if (analytics) tags$head(analytics_resources()),
     # Application UI logic
     navbarPage(
       "Prometheus Enviro Data Visualization",
+      footer = if (analytics) analytics_footer(),
       tabPanel("Current", mod_current_ui("current", prometheus_url)),
       tabPanel("Time Series", mod_timeseries_ui("timeseries", prometheus_url))
     )
@@ -36,7 +41,9 @@ app_ui <- function(request) {
 #'
 #' Internally used to add the favicon, the Font Awesome icons of the full
 #' screen buttons, and the CSS and JavaScript files of `inst/app/www` inside
-#' the Shiny application.
+#' the Shiny application: those of the charts (`custom.css`, `plot_zoom.js`)
+#' and of the analytics (`analytics.css`, `analytics.js`). A file put in that
+#' folder is added without any change here.
 #'
 #' @import shiny
 #' @importFrom golem add_resource_path favicon bundle_resources

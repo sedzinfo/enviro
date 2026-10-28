@@ -61,7 +61,7 @@ Run the tests with `devtools::test()`, and the full package check with `devtools
 
 ## Deploying to shinyapps.io
 
-`app.R` starts the app with the two servers above; change them there for your own. Run `rsconnect::deployApp()` from the package folder, or open `app.R` in RStudio and click Publish. `.rscignore` keeps the upload to the files the app needs.
+`app.R` starts the app with the two servers above; change them there for your own. It also sets `analytics = TRUE`, which adds the cookie banner of the sedzinfo.github.io sites and, once a visitor accepts, Google Analytics; `pimoroni()` leaves them out unless asked, so running the app yourself sends nothing. Run `rsconnect::deployApp()` from the package folder, or open `app.R` in RStudio and click Publish. `.rscignore` keeps the upload to the files the app needs.
 
 ---
 

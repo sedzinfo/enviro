@@ -3,7 +3,7 @@
 ##########################################################################################
 #' Time Series module - UI
 #'
-#' A server picker, the number of days to show, and a chart for each sensor,
+#' A server picker, the period to show (6 hours to 1 year), and a chart for each sensor,
 #' with a full screen button (see `inst/app/www/plot_zoom.js`).
 #'
 #' @param id Character. Module namespace id.
@@ -24,10 +24,15 @@ mod_timeseries_ui <- function(id, prometheus_url) {
   chart <- function(width, output) {
     column(width = width, style = "background-color: #F8F8F8; padding-top: 20px;", output)
   }
+  # the periods to choose from, in days
+  periods <- c(
+    "6 hours" = 0.25, "12 hours" = 0.5, "24 hours" = 1, "3 days" = 3, "1 week" = 7, "2 weeks" = 14,
+    "1 month" = 30, "3 months" = 90, "6 months" = 180, "9 months" = 270, "1 year" = 365
+  )
   tagList(
     fluidRow(
       column(width = 4, selectInput(ns("server_timeseries"), label = "Server", choices = c(prometheus_url), selected = prometheus_url[1], width = "600px")),
-      column(width = 4, selectInput(ns("days"), label = "Days", choices = c(1:7, 15, seq(30, 365, 30), 365), selected = 7))
+      column(width = 4, selectInput(ns("days"), label = "Period", choices = periods, selected = 7))
     ),
     fluidRow(div(
       class = "plotly-full-screen",
@@ -72,8 +77,8 @@ mod_timeseries_ui <- function(id, prometheus_url) {
 mod_timeseries_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     timeseries_data <- reactive({
-      start_time <- format(Sys.time() - as.numeric(input$days) * 60 * 60 * 24, "%Y-%m-%dT%H:%M:%SZ")
-      get_data(start_time = start_time, end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"), urlq = input$server_timeseries)
+      start_time <- format(Sys.time() - as.numeric(input$days) * 60 * 60 * 24, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+      get_data(start_time = start_time, end_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), urlq = input$server_timeseries)
     })
     plot_output <- function(variable, scale = "", render = plotly::renderPlotly) {
       render({

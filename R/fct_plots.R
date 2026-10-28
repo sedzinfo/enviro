@@ -109,8 +109,12 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
 #' @title Plot Gauge
 #' @description Plots the last reading of one sensor as a gauge, with the
 #'   ideal range in green and a short note on what the gas and particle
-#'   sensors measure.
-#' @param data data frame from get_data()
+#'   sensors measure. The gas sensors have no fixed range, so their gauge is
+#'   scaled to all the readings of `data`: it spans the lowest to the highest
+#'   reading, widened by one standard deviation, the green band is the mean plus
+#'   or minus one standard deviation, and the delta is the difference from the
+#'   mean.
+#' @param data data frame from get_data(); the gauge shows its last reading
 #' @param variable one of "Temperature" "Humidity" "Pressure" "Lux" "Proximity" "NH3" "Reducing" "Oxidising" "PM1" "PM2.5" "PM10"
 #' @return A plotly object.
 #' @import plotly
@@ -149,10 +153,11 @@ plot_gauge <- function(data, variable = "Temperature") {
   )
   dflast <- data[data$Timestamp %in% max(data$Timestamp), ]
   last_value <- dflast[, variable]
-  value_mean <- mean(dflast[, variable], na.rm = TRUE)
-  value_sd <- stats::sd(dflast[, variable], na.rm = TRUE)
-  value_max <- max(dflast[, variable])
-  value_min <- min(dflast[, variable])
+  # the sensors without a fixed range are scaled to all the readings, not only the last
+  value_mean <- mean(data[, variable], na.rm = TRUE)
+  value_sd <- stats::sd(data[, variable], na.rm = TRUE)
+  value_max <- max(data[, variable], na.rm = TRUE)
+  value_min <- min(data[, variable], na.rm = TRUE)
   reference <- df_reference[df_reference$names %in% variable, ]
 
   range <- c(reference$range_min, reference$range_max)

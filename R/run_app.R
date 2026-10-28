@@ -10,6 +10,10 @@
 #' @param prometheus_url Character vector of Prometheus query_range urls, one
 #'   per device, such as "http://pip1.crabdance.com:1507/api/v1/query_range".
 #' @param timezone The time zone the readings are shown in, while the app runs.
+#' @param analytics `TRUE` to add Google Analytics, through the cookie banner
+#'   shared with the sites of sedzinfo.github.io, which loads it only after the
+#'   visitor accepts. Meant for the public deployment (see `app.R`); off by
+#'   default, so that running the app yourself sends nothing.
 #' @param onStart See [shiny::shinyApp()].
 #' @param options See [shiny::shinyApp()].
 #' @param enableBookmarking See [shiny::shinyApp()].
@@ -32,6 +36,7 @@
 #' }
 pimoroni <- function(prometheus_url,
                      timezone = "Europe/Bucharest",
+                     analytics = FALSE,
                      onStart = NULL,
                      options = list(),
                      enableBookmarking = NULL,
@@ -39,7 +44,8 @@ pimoroni <- function(prometheus_url,
                      ...) {
   with_golem_options(
     app = shinyApp(
-      ui = app_ui,
+      # shiny calls the ui function with the request only, so analytics is passed in here
+      ui = function(request) app_ui(request, analytics),
       server = app_server,
       onStart = function() {
         # for this app run only: times in the time zone of the data, and small values in full

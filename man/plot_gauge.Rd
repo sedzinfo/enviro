@@ -7,7 +7,7 @@
 plot_gauge(data, variable = "Temperature")
 }
 \arguments{
-\item{data}{data frame from get_data()}
+\item{data}{data frame from get_data(); the gauge shows its last reading}
 
 \item{variable}{one of "Temperature" "Humidity" "Pressure" "Lux" "Proximity" "NH3" "Reducing" "Oxidising" "PM1" "PM2.5" "PM10"}
 }
@@ -17,7 +17,11 @@ A plotly object.
 \description{
 Plots the last reading of one sensor as a gauge, with the
 ideal range in green and a short note on what the gas and particle
-sensors measure.
+sensors measure. The gas sensors have no fixed range, so their gauge is
+scaled to all the readings of \code{data}: it spans the lowest to the highest
+reading, widened by one standard deviation, the green band is the mean plus
+or minus one standard deviation, and the delta is the difference from the
+mean.
 }
 \examples{
 prometheus_url <- c(

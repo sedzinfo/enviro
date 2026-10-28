@@ -9,13 +9,27 @@ function plotZoom(el) {
     parent.removeClass('full-screen').trigger('resize').fadeOut().fadeIn();
     el.attr('data-full_screen', 'false');
   }
+  // the charts drawn by renderUI() only resize with the window
+  window.dispatchEvent(new Event('resize'));
 }
 
-$(function() {
-  $('.plotly-full-screen .plotly.html-widget').append(`
+// Adds the button to the charts that do not have it yet
+function addZoomButtons() {
+  $('.plotly-full-screen .plotly.html-widget').filter(function() {
+    return $(this).find('.plot-zoom').length === 0;
+  }).append(`
     <div style='position: relative;'>
       <button onclick=plotZoom(this) class='plot-zoom' data-full_screen='false' title='Full Screen'>
         <i class='fa fa-expand-arrows-alt'></i>
       </button>
     </div>`);
+}
+
+// the charts of the gas and particle sensors come from renderUI(), after the page has loaded and
+// again after each download, so the charts are watched for new ones
+$(function() {
+  addZoomButtons();
+  $('.plotly-full-screen').each(function() {
+    new MutationObserver(addZoomButtons).observe(this, {childList: true, subtree: true});
+  });
 });

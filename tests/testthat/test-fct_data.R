@@ -4,6 +4,17 @@ test_that("get_data() combines the sensors, joins a split series and drops the c
   expect_equal(data, readings, ignore_attr = TRUE)
 })
 
+test_that("get_data() asks for about 1000 readings, also in a window shorter than a day", {
+  steps <- character()
+  local_mocked_bindings(query_prometheus = function(urlq, metric, start_time, end_time, step) {
+    steps <<- c(steps, step)
+    answers[[metric]]
+  })
+  get_data("2023-11-14T00:00:00Z", "2023-11-14T06:00:00Z", urlq = "http://x")
+  get_data("2023-11-07T00:00:00Z", "2023-11-14T00:00:00Z", urlq = "http://x")
+  expect_equal(unique(steps), c("22s", "605s"))
+})
+
 test_that("get_data() averages series of the same metric at the same time", {
   local_mocked_bindings(query_prometheus = answer_from(list(
     temperature = c(series(c(20, 21, 22, 23, 24)), series(c(22, 23, 24, 25, 26))),

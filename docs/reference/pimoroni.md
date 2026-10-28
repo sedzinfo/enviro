@@ -10,6 +10,7 @@ Current tab, and a chart per sensor in the Time Series tab.
 pimoroni(
   prometheus_url,
   timezone = "Europe/Bucharest",
+  analytics = FALSE,
   onStart = NULL,
   options = list(),
   enableBookmarking = NULL,
@@ -28,6 +29,13 @@ pimoroni(
 - timezone:
 
   The time zone the readings are shown in, while the app runs.
+
+- analytics:
+
+  `TRUE` to add Google Analytics, through the cookie banner shared with
+  the sites of sedzinfo.github.io, which loads it only after the visitor
+  accepts. Meant for the public deployment (see `app.R`); off by
+  default, so that running the app yourself sends nothing.
 
 - onStart:
 

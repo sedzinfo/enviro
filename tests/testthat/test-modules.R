@@ -18,6 +18,22 @@ test_that("the current tab shows the last reading of each sensor", {
   })
 })
 
+test_that("the current tab gives the gauges all the readings, not only the last", {
+  rows <- 0
+  local_mocked_bindings(
+    get_data = function(...) readings,
+    plot_gauge = function(data, variable) {
+      rows <<- nrow(data)
+      plotly::plot_ly(type = "indicator", mode = "number", value = 1)
+    }
+  )
+  testServer(mod_current_server, {
+    session$setInputs(server_gauge = "http://x")
+    output$gauge_temperature
+    expect_equal(rows, nrow(readings))
+  })
+})
+
 test_that("both tabs say when the server cannot be reached", {
   local_mocked_bindings(get_data = function(...) NULL)
   testServer(mod_timeseries_server, {

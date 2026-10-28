@@ -5,15 +5,16 @@
 \title{Get Data from Prometheus}
 \usage{
 get_data(
-  start_time = format(Sys.time() - 60 * 60 * 24 * 7, "\%Y-\%m-\%dT\%H:\%M:\%SZ"),
-  end_time = format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ"),
+  start_time = format(Sys.time() - 60 * 60 * 24 * 7, "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz =
+    "UTC"),
+  end_time = format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC"),
   urlq
 )
 }
 \arguments{
-\item{start_time}{start time in this format: "2025-01-31T11:48:08Z"}
+\item{start_time}{start time, in UTC, in this format: "2025-01-31T11:48:08Z"}
 
-\item{end_time}{end time in this format: "2025-02-07T11:48:33Z"}
+\item{end_time}{end time, in UTC, in this format: "2025-02-07T11:48:33Z"}
 
 \item{urlq}{Prometheus url}
 }
@@ -33,8 +34,8 @@ prometheus_url <- c(
   "http://pip1.crabdance.com:1507/api/v1/query_range",
   "http://pip1.crabdance.com:1505/api/v1/query_range"
 )
-start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "\%Y-\%m-\%dT\%H:\%M:\%SZ")
-end_time <- format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ")
+start_time <- format(Sys.time() - 60 * 60 * 24 * 7, "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC")
+end_time <- format(Sys.time(), "\%Y-\%m-\%dT\%H:\%M:\%SZ", tz = "UTC")
 filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[2])
 head(filtered_df)
 filtered_df <- get_data(start_time = start_time, end_time = end_time, urlq = prometheus_url[1])
