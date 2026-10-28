@@ -17,7 +17,9 @@ A plotly object.
 \description{
 Plots the last reading of one sensor as a gauge, with the
 ideal range in green and a short note on what the gas and particle
-sensors measure. The gas sensors have no fixed range, so their gauge is
+sensors measure. The ideal ranges of PM2.5 and PM10 are the 24-hour
+guidelines of the WHO (2021); PM1, which has none, gets that of PM2.5. The
+gas and proximity sensors have no fixed range, so their gauge is
 scaled to all the readings of \code{data}: it spans the lowest to the highest
 reading, widened by one standard deviation, the green band is the mean plus
 or minus one standard deviation, and the delta is the difference from the
