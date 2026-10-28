@@ -88,12 +88,12 @@ mod_timeseries_server <- function(id) {
         plot_time_series(data = filtered_df, variable = variable, scale = scale) %>% plotly::as_widget()
       })
     }
-    scale_pm <- "micrograms per cubic metre (ug/m3)"
+    scale_pm <- micrograms_m3
     scale_g <- "Ohms"
     output$plot_temperature <- plot_output("Temperature", scale = degrees_celsius)
     output$plot_humidity <- plot_output("Humidity", scale = "Relative humidity (%)")
     output$plot_pressure <- plot_output("Pressure", scale = "hPa")
-    output$plot_lux <- plot_output("Lux", scale = "LUX")
+    output$plot_lux <- plot_output("Lux", scale = "lux")
     output$plot_proximity <- plot_output("Proximity")
     output$plot_pm1 <- plot_output("PM1", scale = scale_pm, render = renderUI)
     output$plot_pm25 <- plot_output("PM2.5", scale = scale_pm, render = renderUI)

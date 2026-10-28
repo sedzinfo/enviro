@@ -1,7 +1,7 @@
 ##########################################################################################
 #
 ##########################################################################################
-#' Greek mu and sigma, and degrees Celsius
+#' Greek mu and sigma, degrees Celsius, and micrograms per cubic metre
 #'
 #' Written as code points, as the R code of a package has to stay ASCII.
 #'
@@ -9,6 +9,7 @@
 symbol_mean <- intToUtf8(0x03bc)
 symbol_sd <- intToUtf8(0x03c3)
 degrees_celsius <- paste0(intToUtf8(0x00b0), "C")
+micrograms_m3 <- paste0(intToUtf8(0x00b5), "g/m", intToUtf8(0x00b3))
 ##########################################################################################
 #
 ##########################################################################################
@@ -82,7 +83,9 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
       ),
       xref = "paper",
       yref = "paper",
-      x = 1.02,
+      # a fixed 10 px from the plot, as a share of its width runs off the edge of a wide chart
+      x = 1,
+      xshift = 10,
       y = 0.1,
       xanchor = "left",
       yanchor = "bottom",
@@ -109,7 +112,9 @@ plot_time_series <- function(data, variable = "Temperature", scale = "", k = 30)
 #' @title Plot Gauge
 #' @description Plots the last reading of one sensor as a gauge, with the
 #'   ideal range in green and a short note on what the gas and particle
-#'   sensors measure. The gas sensors have no fixed range, so their gauge is
+#'   sensors measure. The ideal ranges of PM2.5 and PM10 are the 24-hour
+#'   guidelines of the WHO (2021); PM1, which has none, gets that of PM2.5. The
+#'   gas and proximity sensors have no fixed range, so their gauge is
 #'   scaled to all the readings of `data`: it spans the lowest to the highest
 #'   reading, widened by one standard deviation, the green band is the mean plus
 #'   or minus one standard deviation, and the delta is the difference from the
@@ -140,12 +145,15 @@ plot_gauge <- function(data, variable = "Temperature") {
     "Temperature", "Humidity", "Pressure", "Lux", "Proximity",
     "NH3", "Reducing", "Oxidising", "PM1", "PM2.5", "PM10"
   )
-  scale <- c(degrees_celsius, "%", "hPa", "Lux", NA, "Ohms", "Ohms", "Ohms", "ug/m3", "ug/m3", "ug/m3")
-  range_ideal_min <- c(20, 40, 1010, 1000, 0, NA, NA, NA, 0, 0, 0)
-  range_ideal_max <- c(25, 60, 1015, 1500, 1, NA, NA, NA, 20, 20, 20)
+  # the units after the number: a space before those that are words, as in "1,013 hPa"
+  ugm3 <- paste0(" ", micrograms_m3)
+  scale <- c(degrees_celsius, "%", " hPa", " lux", NA, " Ohms", " Ohms", " Ohms", ugm3, ugm3, ugm3)
+  # NA: scaled to the readings (proximity and the gases); PM2.5 and PM10: the 24-hour WHO guidelines
+  range_ideal_min <- c(20, 40, 1010, 1000, NA, NA, NA, NA, 0, 0, 0)
+  range_ideal_max <- c(25, 60, 1015, 1500, NA, NA, NA, NA, 15, 15, 45)
   point_ideal <- c(24, 50, 1013, 1200, NA, NA, NA, NA, 0, 0, 0)
-  range_min <- c(-50, 0, 900, 0, 0, NA, NA, NA, 0, 0, 0)
-  range_max <- c(50, 100, 1100, 10000, 10, NA, NA, NA, 400, 400, 400)
+  range_min <- c(-50, 0, 900, 0, NA, NA, NA, NA, 0, 0, 0)
+  range_max <- c(50, 100, 1100, 10000, NA, NA, NA, NA, 400, 400, 400)
   help <- c(rep("", 5), help_NH3, help_reducing, help_oxidising, help_pm1, help_pm25, help_pm10)
   df_reference <- data.frame(
     query = metrics, names = names, scale, range_min, range_max,
